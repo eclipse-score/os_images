@@ -105,7 +105,7 @@ bazel-out/k8-fastbuild/bin/qnx8/boards/qemu-x86_64/ifs-qemu-x86_64.bin
 QEMU arm64virt image:
 
 ```
-bazel run //qnx8/boards/qemu-arm64-virt:run 
+bazel run //qnx8/boards/qemu-arm64virt:run 
 ```
 
 QEMU x86_64 image:
