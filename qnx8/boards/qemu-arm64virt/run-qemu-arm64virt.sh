@@ -1,5 +1,5 @@
 #!/bin/bash
-# run-qemu-qemu-arm64virt.sh [<IFS image>]
+# run-qemu-arm64virt.sh [<IFS image>]
 
 # ------------------------------------------
 # General QEMU settings
