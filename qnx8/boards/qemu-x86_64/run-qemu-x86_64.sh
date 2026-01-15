@@ -20,7 +20,7 @@ fi
 # Get the directory where the IFS image is located
 QNX_IFS_DIR="$(dirname "$QNX_IFS")"
 
-SCORE_DISK=disk-score.qcow2
+SCORE_DISK="${QNX_IFS_DIR}/disk-score.qcow2"
 SCORE_DISK_SIZE=512M
 
 if [ ! -f "$SCORE_DISK" ]; then
