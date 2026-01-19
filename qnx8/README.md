@@ -54,19 +54,19 @@ common --sandbox_writable_path=/var/tmp
 QEMU arm64 image using "virt" VM:
 
 ```bash
-bazel build //qnx8/boards/qemu-arm64virt:all
+bazel build //qnx8/boards/qemu-arm64virt:all --config=qnx8_0
 ```
 
 QEMU x86_64 image:
 
 ```bash
-bazel build //qnx8/boards/qemu-x86_64:all
+bazel build //qnx8/boards/qemu-x86_64:all --config=qnx8_0
 ```
 
 In case of requiring an online QNX license checkout for the QNX SDP `mkifs` utility you might have to set the QNXLM_LICENSE_FILE environment variable with the link to the license server `--action_env=QNXLM_LICENSE_FILE=...`, for example:
 
 ```bash
-bazel build --action_env=QNXLM_LICENSE_FILE=my@internal.qnx-license-server.com //qnx8/boards/qemu-arm64virt:all
+bazel build --action_env=QNXLM_LICENSE_FILE=my@internal.qnx-license-server.com //qnx8/boards/qemu-arm64virt:all --config=qnx8_0
 ```
 
 ## Building QNX OS images from external module
@@ -80,7 +80,7 @@ bazel_dep(name = "os_images", version = "...")
 Build it with the `@os_images//` prefix, the rest is identical like in the section above:
 
 ```bash
-bazel build @os_images//qnx8/boards/qemu-...
+bazel build @os_images//qnx8/boards/qemu-... --config=qnx8_0
 ```
 
 

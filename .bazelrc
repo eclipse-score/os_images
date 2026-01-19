@@ -10,9 +10,11 @@ common --registry=https://bcr.bazel.build
 
 # ------------------------------------------------------------------------------
 # QNX toolchain settings - see https://github.com/eclipse-score/toolchains_qnx
-common --incompatible_strict_action_env
+# Common QNX build settings
+
 # mkifs is not a target platform specific tool, the host would be sufficient. But there is only
 # target platform specific toolchains defined for QNX in this repo.
-# Therefore we have to select a target platform and we choose x86_64-qnx.
-common --platforms=@score_bazel_platforms//:x86_64-qnx8_0
-common --sandbox_writable_path=/var/tmp
+# Use --config=qnx8_0 for QNX platform builds
+common:qnx8_0 --incompatible_strict_action_env
+common:qnx8_0 --sandbox_writable_path=/var/tmp
+common:qnx8_0 --platforms=@score_bazel_platforms//:x86_64-qnx8_0

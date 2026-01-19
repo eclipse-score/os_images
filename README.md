@@ -22,3 +22,6 @@ The basic idea is to have modular OS images for *testing* and *verifying* S-CORE
 
 => users can focus on creating the file system with content to match their use cases and *use* the OS image of their choice.
 
+## Usage
+
+For detailed instructions on pre-requisites, building, running, and configuring QNX images, see [qnx8/README.md](qnx8/README.md).
