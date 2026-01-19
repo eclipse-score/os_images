@@ -22,6 +22,8 @@ then
     # 4096 inodes, 512 bytes per block, no reserved blocks
     mkqnx6fs -i 4096 -b 512 -r 0 -q /dev/ram0
     mount -t qnx6 /dev/ram0 /run
+    # Create /run/lola_discovery for lola
+    mkdir /run/lola_discovery
 else
     echo "ERROR: No /dev/ram0 detected. /run file system is not available."
 fi

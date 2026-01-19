@@ -7,6 +7,12 @@ if [ -x /usr/sbin/qconn ]; then
     /usr/sbin/qconn port=8000
 fi
 
+if [ -x /sbin/fsevmgr ]; then
+    echo "---> Starting fsevmgr"
+    /sbin/fsevmgr
+    waitfor /dev/fsnotify
+fi
+
 if [ -x /usr/sbin/sshd ]; then
     echo "---> Starting sshd"
     /usr/sbin/sshd

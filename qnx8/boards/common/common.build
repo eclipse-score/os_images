@@ -448,6 +448,7 @@ ldqnx-64.so.2=ldqnx-64.so.2
 /sbin/chkdosfs=chkdosfs
 /sbin/chkqnx6fs=chkqnx6fs
 /sbin/fdisk=fdisk
+/sbin/fsevmgr=fsevmgr
 /usr/bin/pted=pted
 /bin/vi=vi
 /usr/bin/hogs=hogs
@@ -476,5 +477,7 @@ ldqnx-64.so.2=ldqnx-64.so.2
 [uid=0 gid=0 type=dir dperms=0755] /boot
 [uid=0 gid=0 type=dir dperms=0755] /mnt
 [uid=0 gid=0 type=dir dperms=0755] /opt
+# lola requirement
+[type=link] /tmp_discovery=/run/lola_discovery
 
 
