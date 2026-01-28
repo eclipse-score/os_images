@@ -1,5 +1,14 @@
 #!/bin/sh
 
+# Start file system event manager.
+# Required for applications utilizing inotify_...() APIs.
+# Must start before any block device driver.
+if [ -x /sbin/fsevmgr ]; then
+    echo "---> Starting fsevmgr"
+    /sbin/fsevmgr
+    waitfor /dev/fsnotify
+fi
+
 # Start virtio block device driver
 BLK_DEVICE_RAW=hd0
 
