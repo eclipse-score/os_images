@@ -4,6 +4,7 @@ echo "---> Mounting file systems"
 
 # Mount probe list: hd0... is MBR, hd0.qnx6.x is GPT
 MOUNT_PROBE_LIST="hd0t177 hd0.qnx6.0 hd0.qnx6.1"
+MOUNT_POINT=/opt/score
 
 if [ -f /boot/etc/settings/mount ]; then
 	. /boot/etc/settings/mount
@@ -19,8 +20,8 @@ do
 done
 if [ -n "$BLK_DEVICE" ]
 then
-	echo "Mounting root overlay filesystem /dev/$BLK_DEVICE"
-	mount $MOUNTOPTIONS -t qnx6 /dev/$BLK_DEVICE /
+	echo "Mounting filesystem /dev/$BLK_DEVICE to $MOUNT_POINT"
+	mount $MOUNTOPTIONS -t qnx6 /dev/$BLK_DEVICE $MOUNT_POINT
 else
 	echo "No root file system has been detected"
 fi

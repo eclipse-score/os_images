@@ -182,7 +182,7 @@ After reboot you'll see in the startup messages that a partition is found and mo
 ```
 [...]
 ---> Mounting file systems
-Mounting root overlay filesystem /dev/hd0.qnx6.0
+Mounting filesystem /dev/hd0.qnx6.0 to /opt/score
 [...]
 ```
 
@@ -194,7 +194,7 @@ TODO: integrate `mkqnx6fsimg` into `toolchains_qnx`.
 
 ### Configuring custom IP address + host name
 
-During the startup of the VM the network is being set up, *after* mounting the virtual file system. By default host name `qemu-arm64virt` or `qemu-x86_64` and IP address 192.168.120.20/24 is set up. **Before** setting these, the `net-start.sh` script tries to read a file `/boot/etc/settings/network`. By installing such a file on the virtual file system and adding variables one can configure hostname and IP address of the network interface:
+During the startup of the VM the network is being set up, *after* mounting the virtual file system. By default host name `qemu-arm64virt` or `qemu-x86_64` and IP address 192.168.120.20/24 is set up. **Before** setting these, the `net-start.sh` script tries to read a file `/opt/score/etc/settings/network`. By installing such a file on the virtual file system and adding variables one can configure hostname and IP address of the network interface:
 
 ```
 # /boot/etc/settings/network

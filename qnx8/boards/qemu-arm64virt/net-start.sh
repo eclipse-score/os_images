@@ -4,8 +4,8 @@ DEVICE_NAME_PREFIX=vtnet
 IP_ADDRESS_vtnet0="192.168.120.20/24"
 HOSTNAME=qemu-arm64virt
 
-if [ -f /boot/etc/settings/network ]; then
-	. /boot/etc/settings/network
+if [ -f /opt/score/etc/settings/network ]; then
+	. /opt/score/etc/settings/network
 fi
 
 # Set hostname
