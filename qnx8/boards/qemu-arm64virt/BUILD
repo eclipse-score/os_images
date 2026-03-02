@@ -7,6 +7,7 @@ qnx_ifs (
         "initscript",
         "//qnx8/boards/common:common_files"] + glob(["*.sh"], exclude=["run-*.sh"]),
     extension = "bin",
+    visibility = ["//visibility:public"],
 )
 
 genrule(
