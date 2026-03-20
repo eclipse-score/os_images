@@ -1,4 +1,4 @@
-load("@score_toolchains_qnx//rules/fs:ifs.bzl", "qnx_ifs")
+load("@score_rules_imagefs//rules/qnx:ifs.bzl", "qnx_ifs")
 
 qnx_ifs (
     name = "ifs-qemu-x86_64",

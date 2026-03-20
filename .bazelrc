@@ -7,6 +7,8 @@ test --test_output=errors
 
 common --registry=https://raw.githubusercontent.com/eclipse-score/bazel_registry/main/
 common --registry=https://bcr.bazel.build
+common --host_platform=@score_bazel_platforms//:x86_64-linux
+common --config=qnx8_0
 
 # ------------------------------------------------------------------------------
 # QNX toolchain settings - see https://github.com/eclipse-score/toolchains_qnx
@@ -17,4 +19,7 @@ common --registry=https://bcr.bazel.build
 # Use --config=qnx8_0 for QNX platform builds
 common:qnx8_0 --incompatible_strict_action_env
 common:qnx8_0 --sandbox_writable_path=/var/tmp
-common:qnx8_0 --platforms=@score_bazel_platforms//:x86_64-qnx8_0
+common:qnx8_0 --platforms=@score_bazel_platforms//:aarch64-qnx-sdp_8.0.0-posix
+
+build:qnx8_0 --extra_toolchains=@score_qnx_ifs_toolchain//:ifs-aarch64-qnx-sdp_8.0.0
+
