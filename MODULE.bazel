@@ -50,6 +50,7 @@ use_repo(
 
 register_toolchains(
     "@score_qnx_ifs_toolchain//:ifs-aarch64-qnx-sdp_8.0.0",
+    dev_dependency = True,
 )
 
 
