@@ -54,4 +54,4 @@ $QEMU_BIN -machine virt-4.2 -cpu cortex-a57 -smp $CPU_COUNT -m $MEM_SIZE \
         -nographic \
         -object rng-random,filename=/dev/urandom,id=rng0 -device virtio-rng-device,rng=rng0 \
         -serial mon:stdio \
-        $*
+        "$@"

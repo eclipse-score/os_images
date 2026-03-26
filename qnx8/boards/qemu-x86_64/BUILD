@@ -1,11 +1,13 @@
 load("@score_rules_imagefs//rules/qnx:ifs.bzl", "qnx_ifs")
 
-qnx_ifs (
+qnx_ifs(
     name = "ifs-qemu-x86_64",
     build_file = "qemu-x86_64.build",
-    srcs = ["target.build", 
+    srcs = [
+        "target.build",
         "initscript",
-        "//qnx8/boards/common:common_files"] + glob(["*.sh"], exclude=["run-*.sh"]),
+        "//qnx8/boards/common:common_files",
+    ] + glob(["*.sh"], exclude = ["run-*.sh"]),
     extension = "bin",
     visibility = ["//visibility:public"],
 )

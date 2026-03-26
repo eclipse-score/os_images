@@ -29,7 +29,8 @@ def eprint(*args, **kwargs):
 if __name__ == "__main__":
     data = json.load(sys.stdin)
 
-    if "qnx.com" not in data["uri"]:
+    hostname = urllib.parse.urlparse(data["uri"]).hostname or ""
+    if hostname != "qnx.com" and not hostname.endswith(".qnx.com"):
         eprint("Unsupported domain")
         sys.exit(1)
 

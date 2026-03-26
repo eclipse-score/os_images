@@ -54,4 +54,4 @@ $QEMU_BIN -cpu host -accel kvm -smp $CPU_COUNT -m $MEM_SIZE \
         -nographic \
         -object rng-random,filename=/dev/urandom,id=rng0 -device virtio-rng-pci,rng=rng0 \
         -serial mon:stdio \
-        $*
+        "$@"
