@@ -200,7 +200,7 @@ TODO: integrate `mkqnx6fsimg` into `toolchains_qnx`.
 During the startup of the VM the network is being set up, *after* mounting the virtual file system. By default host name `qemu-arm64virt` or `qemu-x86_64` and IP address 192.168.120.20/24 is set up. **Before** setting these, the `net-start.sh` script tries to read a file `/opt/score/etc/settings/network`. By installing such a file on the virtual file system and adding variables one can configure hostname and IP address of the network interface:
 
 ```
-# /boot/etc/settings/network
+# /opt/score/etc/settings/network
 IP_ADDRESS_vtnet0="192.168.100.1/24"
 HOSTNAME=myqemu
 ```
