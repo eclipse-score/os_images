@@ -5,9 +5,9 @@ This module creates OS images intended for testing S-CORE software:
 * bootable [QNX IFS images using the QNX 8 SDP](qnx8/README.md).
 * bootable Linux image: TODO
 
-**Why do we need OS images?**
+**Motivation**
 
-The basic idea is to have modular OS images for *testing* and *verifying* S-CORE binaries. Main purposes:
+The basic idea is to have generic OS images for *testing* and *verifying* S-CORE binaries. Main purposes:
 
 * re-usable for multiple use cases: unit-, component-, binary- and system tests and demonstrations
 * stuffed with common OS utilities: shell-, file-, test utilities
