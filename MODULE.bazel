@@ -48,13 +48,6 @@ use_repo(
     "score_qnx_ifs_toolchain",
 )
 
-register_toolchains(
-    "@score_qnx_ifs_toolchain//:ifs-aarch64-qnx-sdp_8.0.0",
-    dev_dependency = True,
-)
-
-
-
 # ------------------------------------------------------------------------------
 # General purpose Bazel extensions
 
