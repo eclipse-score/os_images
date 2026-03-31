@@ -32,6 +32,14 @@ if [ ! -f "$SCORE_DISK" ]; then
 fi
 
 # ------------------------------------------
+# Set KVM options based on QEMU_NO_KVM if user does not have kvm - like nested VMs
+if [ -z "${QEMU_NO_KVM:-}" ]; then
+    QEMU_KVM_OPTS="-enable-kvm -cpu host"
+else
+    QEMU_KVM_OPTS="-cpu Cascadelake-Server-v5"
+fi
+
+# ------------------------------------------
 # QEMU user network settings
 #   subnet. This value must match the IP address configured in guest QNX. 
 NETWORK=192.168.120
@@ -46,7 +54,7 @@ VM_IP=$NETWORK.20
 
 # ------------------------------------------
 # Launch QEMU
-$QEMU_BIN -cpu host -accel kvm -smp $CPU_COUNT -m $MEM_SIZE \
+$QEMU_BIN $QEMU_KVM_OPTS -smp $CPU_COUNT -m $MEM_SIZE \
         -kernel $QNX_IFS \
         -drive file=$SCORE_DISK,if=none,id=drv0 -device virtio-blk-pci,drive=drv0 \
         -netdev user,id=net0,net=$NETWORK.0/24,hostfwd=tcp::$HOST_SSH_PORT-$VM_IP:22,hostfwd=tcp::$HOST_QCONN_PORT-$VM_IP:8000,hostfwd=tcp::$HOST_DLT_PORT-$VM_IP:3490,hostfwd=tcp::$HOST_DOIP_PORT-$VM_IP:13400 \
