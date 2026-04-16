@@ -17,7 +17,7 @@ module(
 
 # Compliance and licensing toolchain
 bazel_dep(name = "score_tooling", version = "1.1.0")
-bazel_dep(name = "score_python_basics", version = "0.3.0")
+bazel_dep(name = "score_python_basics", version = "0.3.4")
 
 # Formatting and linting helpers
 bazel_dep(name = "score_format_checker", version = "0.1.1")
