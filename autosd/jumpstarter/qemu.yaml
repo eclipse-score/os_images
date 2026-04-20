@@ -22,9 +22,9 @@ export:
   qemu:
     type: jumpstarter_driver_qemu.driver.Qemu
     config:
-      cpu: host 
+      cpu: host
       smp: 4
-      mem: "8G" 
+      mem: "8G"
       default_partitions:
         # ubuntu
         OVMF_CODE.fd: /usr/share/OVMF/OVMF_CODE_4M.fd
