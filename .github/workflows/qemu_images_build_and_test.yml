@@ -40,9 +40,9 @@ jobs:
       matrix:
         include:
           - image: ubuntu_x86_64
-            target: "//ubuntu_x86_64:image_overlay"
+            target: "//tests/ubuntu_x86_64:image_with_overlay"
           - image: ebclfsa_aarch64
-            target: "//ebclfsa_aarch64:image_overlay"
+            target: "//tests/ebclfsa_aarch64:image_with_overlay"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -52,7 +52,6 @@ jobs:
           sudo apt-get install -y \
             cloud-image-utils \
             libguestfs-tools \
-            linux-image-generic \
             qemu-system-arm \
             qemu-system-x86 \
             qemu-utils \
