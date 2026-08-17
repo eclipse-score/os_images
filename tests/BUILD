@@ -15,16 +15,25 @@ load("@bazel_skylib//rules:build_test.bzl", "build_test")
 load("@rules_shell//shell:sh_test.bzl", "sh_test")
 
 sh_test(
-    name = "image_scripts_test",
+    name = "ubuntu_image_scripts_test",
     size = "small",
-    srcs = ["image_scripts_test.sh"],
+    srcs = ["ubuntu_image_scripts_test.sh"],
     data = [
-        "//ebclfsa_aarch64:qemu_config",
-        "//scripts:build_ebclfsa_aarch64_image.sh",
         "//scripts:build_ubuntu_x86_64_image.sh",
         "//scripts:render_user_data.py",
         "//ubuntu_x86_64:cloud_init",
         "//ubuntu_x86_64:qemu_config",
+    ],
+    target_compatible_with = ["@platforms//os:linux"],
+)
+
+sh_test(
+    name = "ebclfsa_image_scripts_test",
+    size = "small",
+    srcs = ["ebclfsa_image_scripts_test.sh"],
+    data = [
+        "//ebclfsa_aarch64:qemu_config",
+        "//scripts:build_ebclfsa_aarch64_image.sh",
     ],
     target_compatible_with = ["@platforms//os:linux"],
 )
