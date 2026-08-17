@@ -1,0 +1,65 @@
+# *******************************************************************************
+# Copyright (c) 2025 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+name: "QEMU Images: Build and Test"
+on:
+  pull_request:
+    paths:
+      - bazel/**
+      - ebclfsa_aarch64/**
+      - scripts/**
+      - tests/**
+      - ubuntu_x86_64/**
+      - MODULE.bazel
+      - defs.bzl
+      - .github/workflows/qemu_images_build_and_test.yml
+  merge_group:
+    types: [checks_requested]
+  workflow_dispatch:
+jobs:
+  test:
+    name: Bazel tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Run tests
+        run: bazel test //tests/...
+  build-image:
+    name: Build ${{ matrix.image }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - image: ubuntu_x86_64
+            target: "//ubuntu_x86_64:image_overlay"
+          - image: ebclfsa_aarch64
+            target: "//ebclfsa_aarch64:image_overlay"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Install image build dependencies
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y \
+            cloud-image-utils \
+            libguestfs-tools \
+            linux-image-generic \
+            qemu-system-arm \
+            qemu-system-x86 \
+            qemu-utils \
+            sshpass
+          # guestfish needs a readable kernel to boot its appliance.
+          sudo chmod 0644 /boot/vmlinuz-*
+      - name: Build image
+        run: bazel build ${{ matrix.target }}
+      - name: Show build result
+        run: ls -la bazel-bin/${{ matrix.image }}/*-itf/
