@@ -23,6 +23,10 @@ copyright_checker(
     name = "copyright",
     srcs = [
         "autosd",
+        "ebclfsa_aarch64",
+        "scripts",
+        "tests",
+        "ubuntu_x86_64",
         "//:BUILD",
         "//:MODULE.bazel",
     ],

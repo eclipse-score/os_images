@@ -1,5 +1,5 @@
 # *******************************************************************************
-# Copyright (c) 2026 Contributors to the Eclipse Foundation
+# Copyright (c) 2025 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -11,8 +11,19 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
-# Use Dockerfile to get dependabot version bumps after new image is released
-FROM ghcr.io/eclipse-score/devcontainer:v1.11.0
 
-RUN apt-get update && apt-get install -y iputils-ping cloud-image-utils libguestfs-tools linux-image-$(uname -r) \
-    && chmod o+r /boot/vmlinuz-*
+def test_ping_from_host_to_target(target):
+    assert target.ping(timeout=10)
+
+
+def test_ping_from_target_to_host(target):
+    command = """
+        gateway=$(ip route | awk '/default/ {print $3; exit}')
+        if [ -z \"$gateway\" ]; then
+            echo \"No default gateway found\" >&2
+            exit 1
+        fi
+        ping -c 1 -W 5 \"$gateway\"
+    """
+    exit_code, _ = target.execute(command)
+    assert exit_code == 0
