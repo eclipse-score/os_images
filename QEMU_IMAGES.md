@@ -45,16 +45,6 @@ Building the images requires KVM or falls back to slow TCG emulation.
 
 ## Testing
 
-```console
-$ bazel test //tests/...
-```
-
-The tests check the image build scripts and the packaging targets without
-booting QEMU. The images themselves are built by the
-`QEMU Images: Build and Test` workflow.
-
-### QEMU integration tests
-
 Run the image boot and bidirectional ping tests with:
 
 ```console
