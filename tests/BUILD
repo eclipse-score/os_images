@@ -20,7 +20,6 @@ sh_test(
     srcs = ["ubuntu_image_scripts_test.sh"],
     data = [
         "//scripts:build_ubuntu_x86_64_image.sh",
-        "//scripts:render_user_data.py",
         "//ubuntu_x86_64:cloud_init",
         "//ubuntu_x86_64:qemu_config",
     ],

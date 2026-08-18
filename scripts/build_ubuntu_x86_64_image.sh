@@ -20,12 +20,12 @@
 # derived from qemu_config.json, then powers the machine off again, so this
 # script simply has to wait for QEMU to exit.
 #
-# Usage: build_image.sh <working dir> <source image> <target image> <user-data> <meta-data> <qemu-config> <user-data-renderer>
+# Usage: build_image.sh <working dir> <source image> <target image> <user-data> <meta-data> <qemu-config>
 
 set -euxo pipefail
 
-if [[ $# -ne 7 ]]; then
-    echo "Error: Expected 7 arguments (working directory, source image, target image, cloud-init user-data, cloud-init meta-data, qemu config, user-data renderer)" >&2
+if [[ $# -ne 6 ]]; then
+    echo "Error: Expected 6 arguments (working directory, source image, target image, cloud-init user-data, cloud-init meta-data, qemu config)" >&2
     exit 1
 fi
 
@@ -35,7 +35,6 @@ IMAGE_TARGET="$3"
 USER_DATA="$4"
 META_DATA="$5"
 QEMU_CONFIG="$6"
-USER_DATA_RENDERER="$7"
 
 # Size of the resulting disk. The stock cloud image ships a small virtual disk;
 # growing it leaves room for artifacts uploaded by tests.
@@ -68,11 +67,6 @@ if [[ ! -f "${QEMU_CONFIG}" ]]; then
     exit 1
 fi
 
-if [[ ! -f "${USER_DATA_RENDERER}" ]]; then
-    echo "Error: user-data renderer does not exist: ${USER_DATA_RENDERER}" >&2
-    exit 1
-fi
-
 mkdir -p "$(dirname "${IMAGE_TARGET}")"
 rm -f "${IMAGE_TARGET}"
 cp -L "${IMAGE_SOURCE}" "${IMAGE_TARGET}"
@@ -83,13 +77,9 @@ chmod +w "${IMAGE_TARGET}"
 qemu-img resize "${IMAGE_TARGET}" "${IMAGE_SIZE}"
 
 SEED_IMAGE="${WORKING_DIR}/score-itf-seed.img"
-USER_DATA_RENDERED="${WORKING_DIR}/score-itf-user-data.yaml"
 rm -f "${SEED_IMAGE}"
 
-# Keep cloud-init network settings in sync with runtime QEMU settings.
-python3 "${USER_DATA_RENDERER}" "${QEMU_CONFIG}" "${USER_DATA}" "${USER_DATA_RENDERED}"
-
-cloud-localds "${SEED_IMAGE}" "${USER_DATA_RENDERED}" "${META_DATA}"
+cloud-localds "${SEED_IMAGE}" "${USER_DATA}" "${META_DATA}"
 
 QEMU_LOG="${WORKING_DIR}/qemu_customization.log"
 
@@ -110,7 +100,6 @@ timeout "${BOOT_TIMEOUT_SECONDS}" qemu-system-x86_64 \
     -serial mon:stdio </dev/null >"${QEMU_LOG}" 2>&1
 
 rm -f "${SEED_IMAGE}"
-rm -f "${USER_DATA_RENDERED}"
 
 # cloud-init reports failures on stdout but still powers the machine off, so the
 # exit code of QEMU alone is not a sufficient success criterion.

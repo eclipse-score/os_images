@@ -20,7 +20,6 @@ genrule(
         "cloud-init/user-data",
         "qemu_config.json",
         "//scripts:build_ubuntu_x86_64_image.sh",
-        "//scripts:render_user_data.py",
         "@ubuntu_noble_minimal_cloudimg_amd64//file",
     ],
     outs = ["ubuntu-x86_64-itf/ubuntu-24.04-minimal-cloudimg-amd64.img"],
@@ -31,8 +30,7 @@ genrule(
             $(RULEDIR)/ubuntu-x86_64-itf/ubuntu-24.04-minimal-cloudimg-amd64.img \
             $(location cloud-init/user-data) \
             $(location cloud-init/meta-data) \
-            $(location qemu_config.json) \
-            $(location //scripts:render_user_data.py)
+            $(location qemu_config.json)
     """,
     tags = [
         "manual",
