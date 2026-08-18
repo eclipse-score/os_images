@@ -36,7 +36,7 @@ git_override(
     remote = "https://github.com/eclipse-score/itf.git",
 )
 
-python = use_extension("@rules_python//python/extensions:python.bzl", "python")
+python = use_extension("@rules_python//python/extensions:python.bzl", "python", dev_dependency = True)
 python.defaults(python_version = "3.12")
 python.toolchain(
     is_default = True,
