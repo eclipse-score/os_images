@@ -12,7 +12,6 @@
 # *******************************************************************************
 #
 name: eclipse-score
-
 image:
   selinux_mode: permissive
 content:
@@ -29,13 +28,11 @@ content:
     - bluechi-controller
     - bluechi-agent
     - bluechi-ctl
-
   make_dirs:
     - path: /etc/containers/systemd/qm.container.d
       mode: 0755
       parents: true
       exist_ok: true
-
   # Configure shared socket directory via tmpfiles
   add_files:
     - path: /usr/lib/tmpfiles.d/lola_disc.conf
@@ -57,7 +54,6 @@ content:
       source_path: files/bluechi-controller.conf
     - path: /etc/bluechi/agent.conf.d/0-main.conf
       source_path: files/bluechi-agent-main.conf
-
   # Required for testing the image only:
   systemd:
     enabled_services:
@@ -65,7 +61,6 @@ content:
       - sshd.service
       - bluechi-controller.service
       - bluechi-agent.service
-
 qm:
   memory_limit:
     max: infinity
@@ -85,7 +80,6 @@ qm:
     systemd:
       enabled_services:
         - bluechi-agent
-
 auth:
   # Required for testing the image only:
   sshd_config:
