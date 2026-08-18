@@ -53,6 +53,14 @@ The tests check the image build scripts and the packaging targets without
 booting QEMU. The images themselves are built by the
 `QEMU Images: Build and Test` workflow.
 
+### QEMU integration tests
+
+Run the image boot and bidirectional ping tests with:
+
+```console
+$ bazel test --config=qemu-integration //tests/...
+```
+
 ## Security note
 
 The resulting images permit passwordless root SSH login. They are meant for

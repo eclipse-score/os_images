@@ -11,38 +11,38 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
-load("@bazel_skylib//rules:build_test.bzl", "build_test")
-load("@rules_shell//shell:sh_test.bzl", "sh_test")
+load("@score_itf//:defs.bzl", "py_itf_test")
 
-sh_test(
-    name = "ubuntu_image_scripts_test",
-    size = "small",
-    srcs = ["ubuntu_image_scripts_test.sh"],
+py_itf_test(
+    name = "ubuntu_qemu_ping_test",
+    srcs = ["test_ping.py"],
+    args = [
+        "--qemu-config=$(location //ubuntu_x86_64:qemu_config)",
+        "--qemu-rootfs=$(location //ubuntu_x86_64:image)",
+    ],
     data = [
-        "//scripts:build_ubuntu_x86_64_image.sh",
-        "//ubuntu_x86_64:cloud_init",
+        "//ubuntu_x86_64:image",
         "//ubuntu_x86_64:qemu_config",
     ],
+    plugins = ["@score_itf//score/itf/plugins:qemu_plugin"],
+    tags = ["qemu-integration"],
     target_compatible_with = ["@platforms//os:linux"],
 )
 
-sh_test(
-    name = "ebclfsa_image_scripts_test",
-    size = "small",
-    srcs = ["ebclfsa_image_scripts_test.sh"],
+py_itf_test(
+    name = "ebclfsa_qemu_ping_test",
+    srcs = ["test_ping.py"],
+    args = [
+        "--qemu-config=$(location //ebclfsa_aarch64:qemu_config)",
+        "--qemu-kernel=$(location //ebclfsa_aarch64:kernel)",
+        "--qemu-rootfs=$(location //ebclfsa_aarch64:image)",
+    ],
     data = [
+        "//ebclfsa_aarch64:image",
+        "//ebclfsa_aarch64:kernel",
         "//ebclfsa_aarch64:qemu_config",
-        "//scripts:build_ebclfsa_aarch64_image.sh",
     ],
+    plugins = ["@score_itf//score/itf/plugins:qemu_plugin"],
+    tags = ["qemu-integration"],
     target_compatible_with = ["@platforms//os:linux"],
-)
-
-# Verifies that everything which can be built without QEMU and network access
-# still builds. The image targets themselves are tagged "manual" because they
-# boot QEMU; they are built by the "Images: Build" workflow.
-build_test(
-    name = "image_packaging_build_test",
-    targets = [
-        "//ebclfsa_aarch64:network_config_tar",
-    ],
 )
