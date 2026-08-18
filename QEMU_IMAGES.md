@@ -32,21 +32,10 @@ the base images to be downloaded.
 bazel_dep(name = "os_images", version = "1.0")
 ```
 
-```starlark
-# BUILD
-load("@os_images//:defs.bzl", "copy_files_onto_image")
-
-copy_files_onto_image(
-    name = "my_image",
-    srcs = [":my_files_tar"],
-    image = "@os_images//ubuntu_x86_64:image",
-)
-```
-
 ## Building locally
 
 ```console
-$ sudo apt-get install -y cloud-image-utils libguestfs-tools qemu-system-arm \
+$ sudo apt-get install -y cloud-image-utils qemu-system-arm \
       qemu-system-x86 qemu-utils sshpass
 $ bazel build //ubuntu_x86_64:itf-image
 $ bazel build //ebclfsa_aarch64:itf-image

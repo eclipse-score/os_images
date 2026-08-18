@@ -45,7 +45,5 @@ build_test(
     name = "image_packaging_build_test",
     targets = [
         "//ebclfsa_aarch64:network_config_tar",
-        "//tests/ebclfsa_aarch64:overlay_files",
-        "//tests/ubuntu_x86_64:overlay_files",
     ],
 )
