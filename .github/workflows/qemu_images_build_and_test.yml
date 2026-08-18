@@ -25,6 +25,8 @@ on:
   merge_group:
     types: [checks_requested]
   workflow_dispatch:
+permissions:
+  contents: read
 jobs:
   test:
     name: Bazel tests
