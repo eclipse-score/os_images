@@ -25,6 +25,7 @@ ssh_pwauth: true
 package_update: true
 packages:
   - iputils-ping
+  - libatomic1
 
 write_files:
   # Static address matching the tap0 device created by scripts/run_under_qemu.sh
