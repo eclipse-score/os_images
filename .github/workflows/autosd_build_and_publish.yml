@@ -29,16 +29,16 @@ jobs:
             arch: x86_64
             target: qemu
             disk_format: qcow2
-          - platform: qemu-aarch64
-            runner: ubuntu-24.04-arm
-            arch: aarch64
-            target: qemu
-            disk_format: qcow2
-          - platform: rpi4-aarch64
-            runner: ubuntu-24.04-arm
-            arch: aarch64
-            target: rpi4
-            disk_format: img
+          # - platform: qemu-aarch64
+          #   runner: ubuntu-24.04-arm
+          #   arch: aarch64
+          #   target: qemu
+          #   disk_format: qcow2
+          # - platform: rpi4-aarch64
+          #   runner: ubuntu-24.04-arm
+          #   arch: aarch64
+          #   target: rpi4
+          #   disk_format: img
     
     runs-on: ${{ matrix.runner }}
 
