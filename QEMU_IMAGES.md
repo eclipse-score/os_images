@@ -17,6 +17,7 @@ Both packages expose the same public targets:
 | Target | Content |
 | --- | --- |
 | `:image` | The customized disk image |
+| `:vanilla-image` | The unmodified base disk image |
 | `:qemu_config` | `qemu_config.json` describing how to run the image |
 
 `//ebclfsa_aarch64:kernel` additionally provides the kernel required to boot the
@@ -24,6 +25,11 @@ aarch64 image.
 
 The image targets are tagged `manual`, since building them boots QEMU and needs
 the base images to be downloaded.
+
+## Build scripts
+
+All the image build scripts are located in the `//scripts` package.
+They can be used to build your own images.
 
 ## Usage from another Bazel module
 
