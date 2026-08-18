@@ -11,8 +11,6 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
-load("@rules_pkg//pkg:tar.bzl", "pkg_tar")
-
 genrule(
     name = "itf-image",
     srcs = [
@@ -41,6 +39,15 @@ genrule(
 filegroup(
     name = "image",
     srcs = [":ubuntu-x86_64-itf/ubuntu-24.04-minimal-cloudimg-amd64.img"],
+    tags = [
+        "manual",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+filegroup(
+    name = "vanilla-image",
+    srcs = ["@ubuntu_noble_minimal_cloudimg_amd64//file"],
     tags = [
         "manual",
     ],

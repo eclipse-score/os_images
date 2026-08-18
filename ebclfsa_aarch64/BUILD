@@ -71,6 +71,15 @@ filegroup(
 )
 
 filegroup(
+    name = "vanilla-image",
+    srcs = ["ebcl-qemuarm64/fastdev-ubuntu-ebclfsa-ebcl-qemuarm64.wic"],
+    tags = [
+        "manual",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+filegroup(
     name = "kernel",
     srcs = [":ebcl-qemuarm64-itf/fastdev-ubuntu-ebclfsa-ebcl-qemuarm64-vmlinux"],
     tags = [

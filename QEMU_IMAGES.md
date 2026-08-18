@@ -37,8 +37,8 @@ bazel_dep(name = "os_images", version = "1.0")
 ```console
 $ sudo apt-get install -y cloud-image-utils qemu-system-arm \
       qemu-system-x86 qemu-utils sshpass
-$ bazel build //ubuntu_x86_64:itf-image
-$ bazel build //ebclfsa_aarch64:itf-image
+$ bazel build //ubuntu_x86_64:image
+$ bazel build //ebclfsa_aarch64:image
 ```
 
 Building the images requires KVM or falls back to slow TCG emulation.
