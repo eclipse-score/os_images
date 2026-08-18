@@ -23,23 +23,26 @@ jobs:
   build:
     strategy:
       matrix:
-        platform: [qemu-x86_64, qemu-aarch64, rpi4-aarch64]
+        platform: 
+          - qemu-x86_64
+          # - qemu-aarch64
+          # - rpi4-aarch64
         include:
           - platform: qemu-x86_64
             runner: ubuntu-latest
             arch: x86_64
             target: qemu
             disk_format: qcow2
-          - platform: qemu-aarch64
-            runner: ubuntu-24.04-arm
-            arch: aarch64
-            target: qemu
-            disk_format: qcow2
-          - platform: rpi4-aarch64
-            runner: ubuntu-24.04-arm
-            arch: aarch64
-            target: rpi4
-            disk_format: img
+          # - platform: qemu-aarch64
+          #   runner: ubuntu-24.04-arm
+          #   arch: aarch64
+          #   target: qemu
+          #   disk_format: qcow2
+          # - platform: rpi4-aarch64
+          #   runner: ubuntu-24.04-arm
+          #   arch: aarch64
+          #   target: rpi4
+          #   disk_format: img
     
     runs-on: ${{ matrix.runner }}
 
