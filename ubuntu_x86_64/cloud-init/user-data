@@ -51,6 +51,8 @@ write_files:
               - to: default
                 via: 169.254.21.88
                 on-link: true
+              - to: 224.0.0.0/4
+                scope: link
 
   # Prevent cloud-init from re-generating /etc/netplan/50-cloud-init.yaml.
   - path: /etc/cloud/cloud.cfg.d/99-disable-network-config.cfg
