@@ -18,14 +18,14 @@ def test_multicast_route_exists(target):
     if isinstance(output, bytes):
         output = output.decode()
     assert exit_code == 0, f"ip route show failed: {output}"
-    assert "224.0.0.0" in output, f"Multicast route not found in routing table: {output}"
+    assert "224.0.0.0" in output, (
+        f"Multicast route not found in routing table: {output}"
+    )
 
 
 def test_network_interface_has_multicast_flag(target):
     """Verify that the primary network interface has the MULTICAST flag set."""
-    exit_code, output = target.execute(
-        "ip link show | grep -i multicast"
-    )
+    exit_code, output = target.execute("ip link show | grep -i multicast")
     if isinstance(output, bytes):
         output = output.decode()
     assert exit_code == 0, f"No interfaces with MULTICAST flag found: {output}"
