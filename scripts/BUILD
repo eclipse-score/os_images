@@ -10,26 +10,11 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
-apiVersion: jumpstarter.dev/v1alpha1
-kind: ExporterConfig
-# endpoint and token are intentionally left empty
-metadata:
-  namespace: default
-  name: qemu-demo
-endpoint: ""
-token: ""
-export:
-  qemu:
-    type: jumpstarter_driver_qemu.driver.Qemu
-    config:
-      cpu: host
-      smp: 4
-      mem: "8G"
-      default_partitions:
-        # ubuntu
-        OVMF_CODE.fd: /usr/share/OVMF/OVMF_CODE_4M.fd
-        OVMF_VARS.fd: /usr/share/OVMF/OVMF_VARS_4M.fd
-      hostfwd:
-        ssh:
-          hostport: 2222
-          guestport: 22
+
+exports_files(
+    [
+        "build_ebclfsa_aarch64_image.sh",
+        "build_ubuntu_x86_64_image.sh",
+    ],
+    visibility = ["//visibility:public"],
+)

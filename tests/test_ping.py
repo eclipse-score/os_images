@@ -10,26 +10,20 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
-apiVersion: jumpstarter.dev/v1alpha1
-kind: ExporterConfig
-# endpoint and token are intentionally left empty
-metadata:
-  namespace: default
-  name: qemu-demo
-endpoint: ""
-token: ""
-export:
-  qemu:
-    type: jumpstarter_driver_qemu.driver.Qemu
-    config:
-      cpu: host
-      smp: 4
-      mem: "8G"
-      default_partitions:
-        # ubuntu
-        OVMF_CODE.fd: /usr/share/OVMF/OVMF_CODE_4M.fd
-        OVMF_VARS.fd: /usr/share/OVMF/OVMF_VARS_4M.fd
-      hostfwd:
-        ssh:
-          hostport: 2222
-          guestport: 22
+
+
+def test_ping_from_host_to_target(target):
+    assert target.ping(timeout=10)
+
+
+def test_ping_from_target_to_host(target):
+    command = """
+        gateway=$(ip route | awk '/default/ {print $3; exit}')
+        if [ -z \"$gateway\" ]; then
+            echo \"No default gateway found\" >&2
+            exit 1
+        fi
+        ping -c 1 -W 5 \"$gateway\"
+    """
+    exit_code, _ = target.execute(command)
+    assert exit_code == 0

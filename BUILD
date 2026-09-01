@@ -11,8 +11,8 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
-load("@score_tooling//:defs.bzl", "dash_license_checker", "copyright_checker", "setup_starpls", "use_format_targets")
 load("@score_python_basics//:defs.bzl", "score_virtualenv")
+load("@score_tooling//:defs.bzl", "copyright_checker", "dash_license_checker", "setup_starpls", "use_format_targets")
 
 setup_starpls(
     name = "starpls_server",
@@ -22,9 +22,13 @@ setup_starpls(
 copyright_checker(
     name = "copyright",
     srcs = [
+        "autosd",
+        "ebclfsa_aarch64",
+        "scripts",
+        "tests",
+        "ubuntu_x86_64",
         "//:BUILD",
         "//:MODULE.bazel",
-	"autosd"
     ],
     config = "@score_tooling//cr_checker/resources:config",
     template = "@score_tooling//cr_checker/resources:templates",

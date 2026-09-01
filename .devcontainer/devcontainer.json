@@ -1,0 +1,19 @@
+{
+    "name": "eclipse-s-core",
+    "build": {
+        "dockerfile": "Dockerfile"
+    },
+    "runArgs": [
+        "--privileged",
+        "--device=/dev/kvm"
+    ],
+    "postStartCommand": "sudo chmod 666 /dev/kvm",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "github.vscode-github-actions",
+                "streetsidesoftware.code-spell-checker"
+            ]
+        }
+    }
+}
