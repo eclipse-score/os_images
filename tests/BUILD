@@ -14,8 +14,11 @@
 load("@score_itf//:defs.bzl", "py_itf_test")
 
 py_itf_test(
-    name = "ubuntu_qemu_ping_test",
-    srcs = ["test_ping.py"],
+    name = "ubuntu_qemu_test",
+    srcs = [
+        "test_multicast.py",
+        "test_ping.py",
+    ],
     args = [
         "--qemu-config=$(location //ubuntu_x86_64:qemu_config)",
         "--qemu-rootfs=$(location //ubuntu_x86_64:image)",
@@ -30,8 +33,11 @@ py_itf_test(
 )
 
 py_itf_test(
-    name = "ebclfsa_qemu_ping_test",
-    srcs = ["test_ping.py"],
+    name = "ebclfsa_qemu_test",
+    srcs = [
+        "test_multicast.py",
+        "test_ping.py",
+    ],
     args = [
         "--qemu-config=$(location //ebclfsa_aarch64:qemu_config)",
         "--qemu-kernel=$(location //ebclfsa_aarch64:kernel)",
