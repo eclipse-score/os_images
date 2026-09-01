@@ -81,7 +81,7 @@ filegroup(
 
 filegroup(
     name = "kernel",
-    srcs = [":ebcl-qemuarm64-itf/fastdev-trixie-ebclfsa-ebcl-qemuarm64-vmlinux"],
+    srcs = [":ebcl-qemuarm64/fastdev-trixie-ebclfsa-ebcl-qemuarm64-vmlinux"],
     tags = [
         "manual",
     ],
