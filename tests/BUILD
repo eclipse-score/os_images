@@ -35,6 +35,7 @@ py_itf_test(
     name = "ubuntu_qemu_test",
     srcs = [
         "test_multicast.py",
+        "test_no_disk.py",
         "test_ping.py",
     ],
     args = [
@@ -54,6 +55,7 @@ py_itf_test(
     name = "ebclfsa_qemu_test",
     srcs = [
         "test_multicast.py",
+        "test_no_disk.py",
         "test_ping.py",
     ],
     args = [
@@ -90,22 +92,6 @@ py_itf_test(
 )
 
 py_itf_test(
-    name = "ubuntu_qemu_no_disk_test",
-    srcs = ["test_no_disk.py"],
-    args = [
-        "--qemu-config=$(location //ubuntu_x86_64:qemu_config)",
-        "--qemu-rootfs=$(location //ubuntu_x86_64:image)",
-    ],
-    data = [
-        "//ubuntu_x86_64:image",
-        "//ubuntu_x86_64:qemu_config",
-    ],
-    plugins = ["@score_itf//score/itf/plugins:qemu_plugin"],
-    tags = ["qemu-integration"],
-    target_compatible_with = ["@platforms//os:linux"],
-)
-
-py_itf_test(
     name = "ebclfsa_qemu_opt_mount_test",
     srcs = ["test_opt_mount.py"],
     args = [
@@ -116,24 +102,6 @@ py_itf_test(
     ],
     data = [
         ":qemu_disk_image",
-        "//ebclfsa_aarch64:image",
-        "//ebclfsa_aarch64:kernel",
-        "//ebclfsa_aarch64:qemu_config",
-    ],
-    plugins = ["@score_itf//score/itf/plugins:qemu_plugin"],
-    tags = ["qemu-integration"],
-    target_compatible_with = ["@platforms//os:linux"],
-)
-
-py_itf_test(
-    name = "ebclfsa_qemu_no_disk_test",
-    srcs = ["test_no_disk.py"],
-    args = [
-        "--qemu-config=$(location //ebclfsa_aarch64:qemu_config)",
-        "--qemu-kernel=$(location //ebclfsa_aarch64:kernel)",
-        "--qemu-rootfs=$(location //ebclfsa_aarch64:image)",
-    ],
-    data = [
         "//ebclfsa_aarch64:image",
         "//ebclfsa_aarch64:kernel",
         "//ebclfsa_aarch64:qemu_config",
