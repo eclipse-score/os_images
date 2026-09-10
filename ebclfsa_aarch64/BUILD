@@ -17,10 +17,10 @@ genrule(
     name = "extract-fastdev-image",
     srcs = ["@eb_corbos_toolkit_fastdev_archive//file"],
     outs = [
-        "ebcl-qemuarm64/fastdev-ubuntu-ebclfsa-ebcl-qemuarm64.wic",
-        "ebcl-qemuarm64/fastdev-ubuntu-ebclfsa-ebcl-qemuarm64-vmlinux",
+        "ebcl-qemuarm64/fastdev-trixie-ebclfsa-ebcl-qemuarm64.wic",
+        "ebcl-qemuarm64/fastdev-trixie-ebclfsa-ebcl-qemuarm64-vmlinux",
     ],
-    cmd = "mkdir -p $(RULEDIR)/ebcl-qemuarm64 && tar xzf $(location @eb_corbos_toolkit_fastdev_archive//file) -C $(RULEDIR)/ebcl-qemuarm64 && chmod +w $(RULEDIR)/ebcl-qemuarm64/fastdev-ubuntu-ebclfsa-ebcl-qemuarm64.wic",
+    cmd = "mkdir -p $(RULEDIR)/ebcl-qemuarm64 && tar xzf $(location @eb_corbos_toolkit_fastdev_archive//file) -C $(RULEDIR)/ebcl-qemuarm64 && chmod +w $(RULEDIR)/ebcl-qemuarm64/fastdev-trixie-ebclfsa-ebcl-qemuarm64.wic",
     tags = [
         "manual",
     ],
@@ -30,10 +30,10 @@ genrule(
 pkg_tar(
     name = "network_config_tar",
     srcs = [
-        "config-overlay/etc/config/network/network",
+        "config-overlay/etc/config/network",
     ],
     mode = "0644",
-    package_dir = "/etc/config/network",
+    package_dir = "/etc/config",
     visibility = ["//visibility:public"],
 )
 
@@ -45,8 +45,8 @@ genrule(
         "//scripts:build_ebclfsa_aarch64_image.sh",
     ],
     outs = [
-        "ebcl-qemuarm64-itf/fastdev-ubuntu-ebclfsa-ebcl-qemuarm64.wic",
-        "ebcl-qemuarm64-itf/fastdev-ubuntu-ebclfsa-ebcl-qemuarm64-vmlinux",
+        "ebcl-qemuarm64-itf/fastdev-trixie-ebclfsa-ebcl-qemuarm64.wic",
+        "ebcl-qemuarm64-itf/fastdev-trixie-ebclfsa-ebcl-qemuarm64-vmlinux",
     ],
     cmd = """
         bash $(location //scripts:build_ebclfsa_aarch64_image.sh) \
@@ -63,7 +63,7 @@ genrule(
 
 filegroup(
     name = "image",
-    srcs = [":ebcl-qemuarm64-itf/fastdev-ubuntu-ebclfsa-ebcl-qemuarm64.wic"],
+    srcs = [":ebcl-qemuarm64-itf/fastdev-trixie-ebclfsa-ebcl-qemuarm64.wic"],
     tags = [
         "manual",
     ],
@@ -72,7 +72,7 @@ filegroup(
 
 filegroup(
     name = "vanilla-image",
-    srcs = ["ebcl-qemuarm64/fastdev-ubuntu-ebclfsa-ebcl-qemuarm64.wic"],
+    srcs = ["ebcl-qemuarm64/fastdev-trixie-ebclfsa-ebcl-qemuarm64.wic"],
     tags = [
         "manual",
     ],
@@ -81,7 +81,7 @@ filegroup(
 
 filegroup(
     name = "kernel",
-    srcs = [":ebcl-qemuarm64-itf/fastdev-ubuntu-ebclfsa-ebcl-qemuarm64-vmlinux"],
+    srcs = [":ebcl-qemuarm64/fastdev-trixie-ebclfsa-ebcl-qemuarm64-vmlinux"],
     tags = [
         "manual",
     ],
