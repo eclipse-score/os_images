@@ -9,4 +9,4 @@ OS Images for testing and deliveries
 
 ## License
 
-[Apache-2](./LICENSE.md)
+[Apache-2](./LICENSE)
