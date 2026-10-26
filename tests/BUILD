@@ -12,8 +12,23 @@
 # *******************************************************************************
 
 load("@rules_pkg//pkg:mappings.bzl", "pkg_files")
+load("@rules_python//python:defs.bzl", "py_test")
 load("@score_itf//:defs.bzl", "py_itf_test")
 load("@score_rules_imagefs//rules/linux:ext4.bzl", "ext4")
+
+py_test(
+    name = "qemu_config_test",
+    srcs = ["test_qemu_config.py"],
+    args = [
+        "$(location //ebclfsa_aarch64:qemu_config)",
+        "$(location //ubuntu_x86_64:qemu_config)",
+    ],
+    data = [
+        "//ebclfsa_aarch64:qemu_config",
+        "//ubuntu_x86_64:qemu_config",
+    ],
+    main = "test_qemu_config.py",
+)
 
 pkg_files(
     name = "qemu_disk_files",
