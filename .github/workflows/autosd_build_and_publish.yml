@@ -27,7 +27,7 @@ jobs:
           # - rpi4-aarch64
         include:
           - platform: qemu-x86_64
-            runner: ubuntu-latest
+            runner: ubuntu-24.04
             arch: x86_64
             target: qemu
             disk_format: qcow2
