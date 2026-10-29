@@ -13,7 +13,7 @@
 module(name = "os_images")
 
 # Compliance and licensing toolchain
-bazel_dep(name = "score_tooling", version = "1.1.0")
+bazel_dep(name = "score_tooling", version = "3.0.1")
 bazel_dep(name = "score_python_basics", version = "0.3.4")
 
 # Formatting and linting helpers
@@ -37,7 +37,7 @@ bazel_dep(name = "rules_pkg", version = "1.0.1")
 
 # QEMU integration test framework
 bazel_dep(name = "score_itf", version = "0.5.0", dev_dependency = True)
-bazel_dep(name = "rules_python", version = "2.3.2", dev_dependency = True)
+bazel_dep(name = "rules_python", version = "1.9.0", dev_dependency = True)
 
 # TODO: Switch back to a released version once `--qemu-disk` is part of a tagged release.
 git_override(
