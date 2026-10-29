@@ -13,7 +13,7 @@
 module(name = "os_images")
 
 # Compliance and licensing toolchain
-bazel_dep(name = "score_tooling", version = "3.0.1")
+bazel_dep(name = "score_tooling", version = "3.0.2")
 bazel_dep(name = "score_python_basics", version = "0.3.4")
 
 # Formatting and linting helpers
