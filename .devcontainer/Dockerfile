@@ -12,7 +12,7 @@
 # *******************************************************************************
 
 # Use Dockerfile to get dependabot version bumps after new image is released
-FROM ghcr.io/eclipse-score/devcontainer:v1.11.0
+FROM ghcr.io/eclipse-score/devcontainer:v1.11.2
 
 RUN apt-get update && apt-get install -y iputils-ping cloud-image-utils libguestfs-tools linux-image-$(uname -r) \
     && chmod o+r /boot/vmlinuz-*
