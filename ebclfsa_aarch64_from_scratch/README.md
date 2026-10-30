@@ -57,8 +57,19 @@ selects through `EBCLFSA_FASTDEV_NETWORK_CONFIG` in place of the toolkit's
 `ebclfsa-fastdev-network` package. It therefore matches the addresses in
 [`qemu_config.json`](../ebclfsa_aarch64/qemu_config.json).
 
-The ITF-specific changes made to `//ebclfsa_aarch64:image` (passwordless root SSH
-login and the `/opt` mount) are not applied to this image.
+## Root SSH login
+
+Like `//ebclfsa_aarch64:image`, the image permits passwordless root SSH login for
+integration testing. It must never be used in production.
+
+- The `score-itf-sshd-config` package installs
+  [`99-integration-test.conf`](sshd-config/99-integration-test.conf) into
+  `/etc/ssh/sshd_config.d`.
+- [`fastdev_%.bbappend`](meta-score/recipes-images/fastdev/fastdev_%.bbappend)
+  clears the root password at the end of the rootfs post-processing, after the
+  toolkit has set its default password `linux`.
+
+The `/opt` mount of `//ebclfsa_aarch64:image` is not applied to this image.
 
 ## Selecting packages
 
@@ -82,13 +93,21 @@ the same list.
 
 ## Tests
 
-The staging test checks the generated workspace, the network package and the
-error handling without Docker:
+The staging test checks the generated workspace, the configuration packages, the
+root password post-processing and the error handling without Docker:
 
 ```console
 $ bazel test //ebclfsa_aarch64_from_scratch:build_image_test
 ```
 
+The ping, multicast and no-disk QEMU integration tests boot the image with
+`//ebclfsa_aarch64:qemu_config`. The test is tagged `manual`, so
+`bazel test --config=qemu-integration //tests/...` does not build this image:
+
+```console
+$ bazel test --config=qemu-integration //tests:ebclfsa_from_scratch_qemu_test
+```
+
 The [EBcLfSA from scratch workflow](../.github/workflows/ebclfsa_from_scratch_build.yml)
-builds the image when files of this package or the shared network configuration
-change, and can also be started manually.
+builds the image and runs these tests when files of this package, the shared
+network or QEMU configuration, or the tests change. It can also be started manually.

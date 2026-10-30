@@ -12,12 +12,14 @@
 # *******************************************************************************
 
 load("@rules_pkg//pkg:deb.bzl", "pkg_deb")
+load("@rules_pkg//pkg:tar.bzl", "pkg_tar")
 load("@rules_shell//shell:sh_test.bzl", "sh_test")
 
 # Debian packages installed in the image in addition to the toolkit's fastdev
 # packages.
 IMAGE_PACKAGES = [
     ":network_config_deb",
+    ":sshd_config_deb",
 ]
 
 # Selected in kas.yml through EBCLFSA_FASTDEV_NETWORK_CONFIG, so it replaces the
@@ -31,6 +33,29 @@ pkg_deb(
     homepage = "https://github.com/eclipse-score/os_images",
     maintainer = "Eclipse S-CORE contributors <score-dev@eclipse.org>",
     package = "score-network-config",
+    version = "1.0",
+    visibility = ["//visibility:public"],
+)
+
+pkg_tar(
+    name = "sshd_config_tar",
+    srcs = ["sshd-config/99-integration-test.conf"],
+    mode = "0644",
+    package_dir = "/etc/ssh/sshd_config.d",
+)
+
+# Together with the empty root password set in meta-score, this allows
+# passwordless root SSH login for integration testing, not for production use.
+pkg_deb(
+    name = "sshd_config_deb",
+    architecture = "all",
+    conffiles = ["/etc/ssh/sshd_config.d/99-integration-test.conf"],
+    data = ":sshd_config_tar",
+    depends = ["openssh-server"],
+    description = "Eclipse S-CORE passwordless root SSH login for integration testing",
+    homepage = "https://github.com/eclipse-score/os_images",
+    maintainer = "Eclipse S-CORE contributors <score-dev@eclipse.org>",
+    package = "score-itf-sshd-config",
     version = "1.0",
     visibility = ["//visibility:public"],
 )
@@ -80,11 +105,15 @@ sh_test(
     args = [
         "$(location :network_config_deb)",
         "$(location //ebclfsa_aarch64:config-overlay/etc/config/network)",
+        "$(location :sshd_config_deb)",
+        "$(location sshd-config/99-integration-test.conf)",
     ],
     data = [
         "build_image.sh",
         "kas.yml",
+        "sshd-config/99-integration-test.conf",
         ":network_config_deb",
+        ":sshd_config_deb",
         "//ebclfsa_aarch64:config-overlay/etc/config/network",
     ] + glob(["meta-score/**"]),
 )

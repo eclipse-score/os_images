@@ -15,7 +15,8 @@ can depend on them directly.
 [`//ebclfsa_aarch64_from_scratch`](./ebclfsa_aarch64_from_scratch/README.md)
 additionally builds the EBcLfSA image from the toolkit's packages with KAS/Isar
 instead of modifying the prebuilt image. It uses the same network configuration
-and is only built when selected explicitly.
+and passwordless root SSH login, and is only built and tested when selected
+explicitly.
 
 Both packages expose the same public targets:
 

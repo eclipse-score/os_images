@@ -13,14 +13,16 @@
 # *******************************************************************************
 
 # Checks the workspace staging of build_image.sh without a privileged container
-# or network access, and the content of the network configuration package.
-# Arguments: NETWORK_CONFIG_DEB NETWORK_CONFIG_FILE
+# or network access, and the content of the configuration packages.
+# Arguments: NETWORK_CONFIG_DEB NETWORK_CONFIG_FILE SSHD_CONFIG_DEB SSHD_CONFIG_FILE
 
 set -euo pipefail
 
-[[ $# == 2 ]]
+[[ $# == 4 ]]
 network_deb=$(realpath "$1")
 network_config=$(realpath "$2")
+sshd_deb=$(realpath "$3")
+sshd_config=$(realpath "$4")
 sources="$TEST_SRCDIR/_main/ebclfsa_aarch64_from_scratch"
 fixture="$TEST_TMPDIR/fixture"
 output="$TEST_TMPDIR/output"
@@ -77,6 +79,8 @@ docker() {
     [[ $(find "$work/meta-score" -name '*.bb' | wc -l) -eq $count ]]
     grep -Fxq "    IMAGE_INSTALL:append = \" $EXPECTED_PACKAGE_NAMES\"" "$work/kas/score-packages.yml"
     cmp "$sources/kas.yml" "$work/kas/score.yml"
+    cmp "$sources/meta-score/recipes-images/fastdev/fastdev_%.bbappend" \
+        "$work/meta-score/recipes-images/fastdev/fastdev_%.bbappend"
     if [[ ${MOCK_DOCKER_FAIL:-0} == 1 ]]; then
         return 17
     fi
@@ -108,10 +112,30 @@ cmp "$network_config" "$installed/etc/config/network"
 [[ $(stat -c %a "$installed/etc/config/network") == 644 ]]
 dpkg-deb --control "$network_deb" "$TEST_TMPDIR/network-control"
 grep -Fxq /etc/config/network "$TEST_TMPDIR/network-control/conffiles"
-mkdir -p "$TEST_TMPDIR/packages/score-network-config"
+
+# The SSH package and the bbappend together allow passwordless root login.
+[[ $(dpkg-deb --field "$sshd_deb" Package) == score-itf-sshd-config ]]
+[[ $(dpkg-deb --field "$sshd_deb" Architecture) == all ]]
+[[ $(dpkg-deb --field "$sshd_deb" Depends) == openssh-server ]]
+dpkg-deb --extract "$sshd_deb" "$installed"
+cmp "$sshd_config" "$installed/etc/ssh/sshd_config.d/99-integration-test.conf"
+[[ $(stat -c %a "$installed/etc/ssh/sshd_config.d/99-integration-test.conf") == 644 ]]
+grep -Fxq 'PermitEmptyPasswords yes' "$installed/etc/ssh/sshd_config.d/99-integration-test.conf"
+grep -Fxq 'ROOTFS_POSTPROCESS_COMMAND:append = " score_passwordless_root"' \
+    "$sources/meta-score/recipes-images/fastdev/fastdev_%.bbappend"
+shadow="$TEST_TMPDIR/shadow"
+printf 'root:$6$salt$hash:20000:0:99999:7:::\nuser:x:20000:0:99999:7:::\n' > "$shadow"
+eval "$(sed -n '/^score_passwordless_root() {/,/^}/p' \
+    "$sources/meta-score/recipes-images/fastdev/fastdev_%.bbappend" |
+    sed -e "s|sudo ||" -e "s|'\${ROOTFSDIR}/etc/shadow'|\"\$shadow\"|")"
+score_passwordless_root
+[[ $(head -1 "$shadow") == 'root::20000:0:99999:7:::' ]]
+[[ $(tail -1 "$shadow") == 'user:x:20000:0:99999:7:::' ]]
+mkdir -p "$TEST_TMPDIR/packages/score-network-config" "$TEST_TMPDIR/packages/score-itf-sshd-config"
 cp "$network_deb" "$TEST_TMPDIR/packages/score-network-config/input package.deb"
-export EXPECTED_PACKAGE_NAMES="score-network-config"
-build_image "$network_deb"
+cp "$sshd_deb" "$TEST_TMPDIR/packages/score-itf-sshd-config/input package.deb"
+export EXPECTED_PACKAGE_NAMES="score-network-config score-itf-sshd-config"
+build_image "$network_deb" "$sshd_deb"
 
 [[ ! -e "$fixture/kas/score.yml" ]]
 [[ ! -e "$fixture/meta-score" ]]

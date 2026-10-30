@@ -10,13 +10,17 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
-name: "EBcLfSA from scratch: Build"
+name: "EBcLfSA from scratch: Build and Test"
 on:
   pull_request:
     types: [opened, reopened, synchronize]
     paths:
       - ebclfsa_aarch64_from_scratch/**
       - ebclfsa_aarch64/config-overlay/**
+      - ebclfsa_aarch64/qemu_config.json
+      - tests/test_multicast.py
+      - tests/test_no_disk.py
+      - tests/test_ping.py
       - .github/workflows/ebclfsa_from_scratch_build.yml
   workflow_dispatch:
 # Building the image takes long, do not keep outdated runs of a PR.
@@ -36,6 +40,19 @@ jobs:
         uses: actions/checkout@v7
       - name: Setup Bazel
         uses: bazel-contrib/setup-bazel@0.19.1
+      - name: Install qemu
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y qemu-system-arm
+      - name: Enable KVM group perms
+        run: |
+          sudo chmod 666 /dev/kvm
+      - name: Allow unprivileged user namespaces
+        run: |
+          sudo sysctl kernel.apparmor_restrict_unprivileged_userns=0
       - name: Build EBcLfSA image from scratch
         run: |
           bazel build //ebclfsa_aarch64_from_scratch:image //ebclfsa_aarch64_from_scratch:kernel
+      - name: Run QEMU integration tests
+        run: |
+          bazel test --config=qemu-integration //tests:ebclfsa_from_scratch_qemu_test
