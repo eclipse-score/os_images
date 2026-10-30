@@ -12,6 +12,11 @@ can depend on them directly.
 | `//ubuntu_x86_64` | Ubuntu 24.04 minimal cloud image | x86_64 |
 | `//ebclfsa_aarch64` | EB corbos Linux for Safety Applications fastdev image | aarch64 |
 
+[`//ebclfsa_aarch64_from_scratch`](./ebclfsa_aarch64_from_scratch/README.md)
+additionally builds the EBcLfSA image from the toolkit's packages with KAS/Isar
+instead of modifying the prebuilt image. It uses the same network configuration
+and is only built when selected explicitly.
+
 Both packages expose the same public targets:
 
 | Target | Content |

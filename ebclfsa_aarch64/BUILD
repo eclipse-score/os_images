@@ -13,6 +13,11 @@
 
 load("@rules_pkg//pkg:tar.bzl", "pkg_tar")
 
+exports_files(
+    ["config-overlay/etc/config/network"],
+    visibility = ["//visibility:public"],
+)
+
 genrule(
     name = "extract-fastdev-image",
     srcs = ["@eb_corbos_toolkit_fastdev_archive//file"],
