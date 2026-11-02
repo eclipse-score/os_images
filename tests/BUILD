@@ -153,7 +153,6 @@ py_itf_test(
     target_compatible_with = ["@platforms//os:linux"],
 )
 
-
 py_itf_test(
     name = "ebclfsa_from_scratch_opt_mount_qemu_test",
     srcs = [
