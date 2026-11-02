@@ -12,9 +12,8 @@
 ----------------------------------------------------------------------------- -->
 # EB corbos Linux for Safety Applications: image from scratch
 
-Builds a new `fastdev` aarch64 disk image with KAS/Isar from a Git checkout of the
-[EB corbos Toolkit v2.0.0-beta3 tag](https://github.com/Elektrobit/eb_corbos_toolkit/tree/v2.0.0-beta3),
-pinned to its commit in `MODULE.bazel`. Unlike [`//ebclfsa_aarch64`](../ebclfsa_aarch64),
+Builds a new `fastdev` aarch64 disk image with KAS/Isar.
+Unlike [`//ebclfsa_aarch64`](../ebclfsa_aarch64),
 it neither downloads nor boots the toolkit's prebuilt disk image. The toolkit
 still supplies precompiled system packages, including the kernel; this is an
 image build from packages, not a source rebuild of the entire OS.
@@ -69,7 +68,9 @@ integration testing. It must never be used in production.
   clears the root password at the end of the rootfs post-processing, after the
   toolkit has set its default password `linux`.
 
-The `/opt` mount of `//ebclfsa_aarch64:image` is not applied to this image.
+## /opt mount
+
+A secondary disk image can be attached to the QEMU targets via the `--qemu-disk` option, in which case it is mounted on `/opt` inside the guest.
 
 ## Selecting packages
 
