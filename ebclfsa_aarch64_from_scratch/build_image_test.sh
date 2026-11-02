@@ -62,6 +62,8 @@ docker() {
     done
     work=${mount#type=bind,src=}
     work=${work%,dst=/workspace}
+    [[ $DOCKER_CONFIG == "$work/.docker" ]]
+    [[ -d $DOCKER_CONFIG ]]
     [[ ! -e "$work/prebuilt" ]]
     cmp "$TEST_TMPDIR/fixture/kas/public.yml" "$work/kas/public.yml"
     cmp "$TEST_TMPDIR/fixture/layers/isar/isar-init-build-env" "$work/layers/isar/isar-init-build-env"

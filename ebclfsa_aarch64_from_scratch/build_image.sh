@@ -75,7 +75,10 @@ EOF
 
 # Match the toolkit's v18 container, pinned independently of its mutable tag.
 container=ghcr.io/elektrobit/eb-corbos-toolkit-devcontainer-amd64@sha256:10f487469c03fb2b5be1c804ec0b0c911d3903a9dd9a8fcbb8b8f401d43b158c
-docker run --rm --init --privileged --user root \
+# The image is public. Avoid host credential helpers, which may be unavailable
+# when this local Bazel action runs inside a dev container.
+mkdir "$work/.docker"
+DOCKER_CONFIG="$work/.docker" docker run --rm --init --privileged --user root \
     --mount "type=bind,src=$work,dst=/workspace" \
     --workdir /workspace "$container" \
     bash -euo pipefail -c '
