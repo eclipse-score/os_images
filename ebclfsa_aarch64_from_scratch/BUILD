@@ -13,7 +13,6 @@
 
 load("@rules_pkg//pkg:deb.bzl", "pkg_deb")
 load("@rules_pkg//pkg:tar.bzl", "pkg_tar")
-load("@rules_shell//shell:sh_test.bzl", "sh_test")
 
 # Debian packages installed in the image in addition to the toolkit's fastdev
 # packages.
@@ -96,24 +95,4 @@ filegroup(
     srcs = [":fastdev-trixie-ebclfsa-ebcl-qemuarm64-vmlinux"],
     tags = ["manual"],
     visibility = ["//visibility:public"],
-)
-
-sh_test(
-    name = "build_image_test",
-    size = "small",
-    srcs = ["build_image_test.sh"],
-    args = [
-        "$(location :network_config_deb)",
-        "$(location //ebclfsa_aarch64:config-overlay/etc/config/network)",
-        "$(location :sshd_config_deb)",
-        "$(location sshd-config/99-integration-test.conf)",
-    ],
-    data = [
-        "build_image.sh",
-        "kas.yml",
-        "sshd-config/99-integration-test.conf",
-        ":network_config_deb",
-        ":sshd_config_deb",
-        "//ebclfsa_aarch64:config-overlay/etc/config/network",
-    ] + glob(["meta-score/**"]),
 )

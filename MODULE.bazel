@@ -34,7 +34,6 @@ bazel_dep(
 bazel_dep(name = "platforms", version = "1.1.0", dev_dependency = True)
 
 bazel_dep(name = "rules_pkg", version = "1.0.1")
-bazel_dep(name = "rules_shell", version = "0.6.1")
 
 # QEMU integration test framework
 bazel_dep(name = "score_itf", version = "0.5.0", dev_dependency = True)
