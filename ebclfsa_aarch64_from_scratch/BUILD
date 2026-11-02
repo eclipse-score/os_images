@@ -17,7 +17,6 @@ load("@rules_pkg//pkg:tar.bzl", "pkg_tar")
 # Debian packages installed in the image in addition to the toolkit's fastdev
 # packages.
 IMAGE_PACKAGES = [
-    ":fstab_config_deb",
     ":network_config_deb",
     ":sshd_config_deb",
 ]
@@ -26,28 +25,6 @@ exports_files(
     [
         "build_image.sh",
     ],
-    visibility = ["//visibility:public"],
-)
-
-pkg_tar(
-    name = "fstab_config_tar",
-    srcs = ["fstab"],
-    mode = "0644",
-    package_dir = "/etc",
-)
-
-# Selected in kas.yml through EBCLFSA_FASTDEV_FSTAB_CONFIG, so it replaces the
-# toolkit's default fstab package.
-pkg_deb(
-    name = "fstab_config_deb",
-    architecture = "all",
-    conffiles = ["/etc/fstab"],
-    data = ":fstab_config_tar",
-    description = "Eclipse S-CORE mount configuration for EB corbos Linux for Safety Applications",
-    homepage = "https://github.com/eclipse-score/os_images",
-    maintainer = "Eclipse S-CORE contributors <score-dev@eclipse.org>",
-    package = "score-fstab-config",
-    version = "1.0",
     visibility = ["//visibility:public"],
 )
 

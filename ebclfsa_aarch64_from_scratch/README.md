@@ -30,7 +30,6 @@ to `bazel-bin/ebclfsa_aarch64_from_scratch/`.
 | --- | --- |
 | `:image` | The `.wic` disk image |
 | `:kernel` | The kernel required to boot the image |
-| `:fstab_config_deb` | The `score-fstab-config` Debian package |
 | `:network_config_deb` | The `score-network-config` Debian package |
 
 ## Requirements
@@ -71,10 +70,7 @@ integration testing. It must never be used in production.
 
 ## /opt mount
 
-A secondary disk image can be attached to the QEMU targets via the `--qemu-disk`
-option, in which case it is mounted on `/opt` inside the guest. The image uses
-the [`score-fstab-config`](fstab) package in place of the toolkit's default
-fstab package so this optional mount is configured during rootfs installation.
+A secondary disk image can be attached to the QEMU targets via the `--qemu-disk` option, in which case it is mounted on `/opt` inside the guest.
 
 ## Selecting packages
 

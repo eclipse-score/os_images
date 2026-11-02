@@ -18,9 +18,6 @@ repos:
     layers:
       .:
 local_conf_header:
-  # Replace the toolkit's default fstab package to mount an optional ITF disk.
-  score_fstab: |
-    EBCLFSA_FASTDEV_FSTAB_CONFIG = "score-fstab-config"
   # Replace the toolkit's default network package (ebclfsa-fastdev-network) by
   # the network configuration shared with //ebclfsa_aarch64.
   score_network: |
