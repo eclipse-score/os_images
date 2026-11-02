@@ -93,19 +93,12 @@ the same list.
 
 ## Tests
 
-The staging test checks the generated workspace, the configuration packages, the
-root password post-processing and the error handling without Docker:
-
-```console
-$ bazel test //ebclfsa_aarch64_from_scratch:build_image_test
-```
-
 The ping, multicast and no-disk QEMU integration tests boot the image with
 `//ebclfsa_aarch64:qemu_config`. The test is tagged `manual`, so
 `bazel test --config=qemu-integration //tests/...` does not build this image:
 
 ```console
-$ bazel test --config=qemu-integration //tests:ebclfsa_from_scratch_qemu_test
+$ bazel test --config=qemu-integration //tests:ebclfsa_from_scratch_qemu_test //tests:ebclfsa_from_scratch_opt_mount_qemu_test
 ```
 
 The [EBcLfSA from scratch workflow](../.github/workflows/ebclfsa_from_scratch_build.yml)
