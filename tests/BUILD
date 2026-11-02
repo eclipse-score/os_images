@@ -152,3 +152,31 @@ py_itf_test(
     tags = ["qemu-integration"],
     target_compatible_with = ["@platforms//os:linux"],
 )
+
+
+py_itf_test(
+    name = "ebclfsa_from_scratch_opt_mount_qemu_test",
+    srcs = [
+        "test_opt_mount.py",
+    ],
+    args = [
+        "--qemu-config=$(location //ebclfsa_aarch64:qemu_config)",
+        "--qemu-disk=$(location :qemu_disk_image)",
+        "--qemu-kernel=$(location //ebclfsa_aarch64_from_scratch:kernel)",
+        "--qemu-rootfs=$(location //ebclfsa_aarch64_from_scratch:image)",
+    ],
+    data = [
+        ":qemu_disk_image",
+        "//ebclfsa_aarch64:qemu_config",
+        "//ebclfsa_aarch64_from_scratch:image",
+        "//ebclfsa_aarch64_from_scratch:kernel",
+    ],
+    plugins = ["@score_itf//score/itf/plugins:qemu_plugin"],
+    # Building the image takes long, so the test only runs when selected
+    # explicitly, see .github/workflows/ebclfsa_from_scratch_build.yml.
+    tags = [
+        "manual",
+        "qemu-integration",
+    ],
+    target_compatible_with = ["@platforms//os:linux"],
+)

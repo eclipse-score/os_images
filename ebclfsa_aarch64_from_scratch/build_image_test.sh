@@ -123,7 +123,7 @@ dpkg-deb --extract "$sshd_deb" "$installed"
 cmp "$sshd_config" "$installed/etc/ssh/sshd_config.d/99-integration-test.conf"
 [[ $(stat -c %a "$installed/etc/ssh/sshd_config.d/99-integration-test.conf") == 644 ]]
 grep -Fxq 'PermitEmptyPasswords yes' "$installed/etc/ssh/sshd_config.d/99-integration-test.conf"
-grep -Fxq 'ROOTFS_POSTPROCESS_COMMAND:append = " score_passwordless_root"' \
+grep -Fxq 'ROOTFS_POSTPROCESS_COMMAND:append = " score_passwordless_root score_opt_mount"' \
     "$sources/meta-score/recipes-images/fastdev/fastdev_%.bbappend"
 shadow="$TEST_TMPDIR/shadow"
 printf 'root:$6$salt$hash:20000:0:99999:7:::\nuser:x:20000:0:99999:7:::\n' > "$shadow"
@@ -133,6 +133,15 @@ eval "$(sed -n '/^score_passwordless_root() {/,/^}/p' \
 score_passwordless_root
 [[ $(head -1 "$shadow") == 'root::20000:0:99999:7:::' ]]
 [[ $(tail -1 "$shadow") == 'user:x:20000:0:99999:7:::' ]]
+
+# An ITF additional disk is mounted on /opt without preventing diskless boots.
+fstab="$TEST_TMPDIR/fstab"
+touch "$fstab"
+eval "$(sed -n '/^score_opt_mount() {/,/^}/p' \
+    "$sources/meta-score/recipes-images/fastdev/fastdev_%.bbappend" |
+    sed -e 's|sudo tee|tee|' -e "s|'\${ROOTFSDIR}/etc/fstab'|\"\$fstab\"|")"
+score_opt_mount
+grep -Fxq $'/dev/vdb\t/opt\tauto\tdefaults,nofail\t0\t0' "$fstab"
 mkdir -p "$TEST_TMPDIR/packages/score-network-config" "$TEST_TMPDIR/packages/score-itf-sshd-config"
 cp "$network_deb" "$TEST_TMPDIR/packages/score-network-config/input package.deb"
 cp "$sshd_deb" "$TEST_TMPDIR/packages/score-itf-sshd-config/input package.deb"
