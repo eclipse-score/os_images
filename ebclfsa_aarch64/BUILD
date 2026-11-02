@@ -14,7 +14,10 @@
 load("@rules_pkg//pkg:tar.bzl", "pkg_tar")
 
 exports_files(
-    ["config-overlay/etc/config/network"],
+    [
+        "config-overlay/etc/config/network",
+        "build_image.sh",
+    ],
     visibility = ["//visibility:public"],
 )
 
@@ -47,14 +50,14 @@ genrule(
     srcs = [
         ":extract-fastdev-image",
         ":network_config_tar",
-        "//scripts:build_ebclfsa_aarch64_image.sh",
+        "build_image.sh",
     ],
     outs = [
         "ebcl-qemuarm64-itf/fastdev-trixie-ebclfsa-ebcl-qemuarm64.wic",
         "ebcl-qemuarm64-itf/fastdev-trixie-ebclfsa-ebcl-qemuarm64-vmlinux",
     ],
     cmd = """
-        bash $(location //scripts:build_ebclfsa_aarch64_image.sh) \
+        bash $(location :build_image.sh) \
             $(RULEDIR) \
             $(RULEDIR)/ebcl-qemuarm64 \
             $(RULEDIR)/ebcl-qemuarm64-itf \

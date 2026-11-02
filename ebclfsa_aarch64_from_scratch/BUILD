@@ -21,6 +21,13 @@ IMAGE_PACKAGES = [
     ":sshd_config_deb",
 ]
 
+exports_files(
+    [
+        "build_image.sh",
+    ],
+    visibility = ["//visibility:public"],
+)
+
 # Selected in kas.yml through EBCLFSA_FASTDEV_NETWORK_CONFIG, so it replaces the
 # toolkit's ebclfsa-fastdev-network package instead of conflicting with it.
 pkg_deb(
