@@ -88,7 +88,14 @@ DOCKER_CONFIG="$work/.docker" docker run --rm --init --privileged --user root \
             groupmod -g "$gid" developer
         fi
         usermod -u "$uid" -g "$gid" developer
-        trap '\''chown -R "$uid:$gid" /workspace'\'' EXIT
+        cleanup() {
+            status=$?
+            # BitBake may remove its socket and lock while chown traverses the
+            # workspace. Cleanup must not turn a successful build into a failure.
+            chown -R "$uid:$gid" /workspace || :
+            exit "$status"
+        }
+        trap cleanup EXIT
         if [[ ! -e /proc/sys/fs/binfmt_misc/qemu-aarch64 ]]; then
             mount -t binfmt_misc binfmt_misc /proc/sys/fs/binfmt_misc
             update-binfmts --import /workspace/.devcontainer/binfmt-config/qemu-aarch64
