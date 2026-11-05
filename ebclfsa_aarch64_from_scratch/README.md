@@ -12,7 +12,14 @@
 ----------------------------------------------------------------------------- -->
 # EB corbos Linux for Safety Applications: image from scratch
 
-Builds a new `fastdev` aarch64 disk image with KAS/Isar.
+Builds a new `score-image` aarch64 disk image with KAS/Isar.
+The standalone [recipe](meta-score/recipes-images/score-image/score-image_1.0.bb)
+is derived from the toolkit's
+[`fastdev_1.0.bb`](https://github.com/Elektrobit/eb_corbos_toolkit/blob/fe2cddbc01232e4b62accb9abab783c8ccf75ef7/layers/meta-ebclfsa/meta-ebclfsa-public/meta-ebclfsa-public-images/recipes-images/fastdev/fastdev_1.0.bb),
+without `ebclfsa-comfwdlib-sim` or `ebclfsa-li-demo`.
+It retains `ebclfsa-hi-cflinit` and its mandatory `ebclfsa-hi-demo` application
+for booting with the shared QEMU configuration.
+[kas.yml](kas.yml) selects it instead of `fastdev`.
 Unlike [`//ebclfsa_aarch64`](../ebclfsa_aarch64),
 it neither downloads nor boots the toolkit's prebuilt disk image. The toolkit
 still supplies precompiled system packages, including the kernel; this is an
@@ -64,13 +71,15 @@ integration testing. It must never be used in production.
 - The `score-itf-sshd-config` package installs
   [`99-integration-test.conf`](sshd-config/99-integration-test.conf) into
   `/etc/ssh/sshd_config.d`.
-- [`fastdev_%.bbappend`](meta-score/recipes-images/fastdev/fastdev_%.bbappend)
+- [`score-image_1.0.bb`](meta-score/recipes-images/score-image/score-image_1.0.bb)
   clears the root password at the end of the rootfs post-processing, after the
   toolkit has set its default password `linux`.
 
 ## /opt mount
 
 A secondary disk image can be attached to the QEMU targets via the `--qemu-disk` option, in which case it is mounted on `/opt` inside the guest.
+The image recipe adds `/dev/vdb` to `/etc/fstab` with `nofail`, so the image
+also boots when no secondary disk is attached.
 
 ## Selecting packages
 

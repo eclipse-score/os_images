@@ -14,8 +14,7 @@
 load("@rules_pkg//pkg:deb.bzl", "pkg_deb")
 load("@rules_pkg//pkg:tar.bzl", "pkg_tar")
 
-# Debian packages installed in the image in addition to the toolkit's fastdev
-# packages.
+# Debian packages installed in addition to the score-image recipe's packages.
 IMAGE_PACKAGES = [
     ":network_config_deb",
     ":sshd_config_deb",
@@ -76,8 +75,8 @@ genrule(
         "@eb_corbos_toolkit//:sources",
     ] + IMAGE_PACKAGES + glob(["meta-score/**"]),
     outs = [
-        "fastdev-trixie-ebclfsa-ebcl-qemuarm64-vmlinux",
-        "fastdev-trixie-ebclfsa-ebcl-qemuarm64.wic",
+        "score-image-trixie-ebclfsa-ebcl-qemuarm64-vmlinux",
+        "score-image-trixie-ebclfsa-ebcl-qemuarm64.wic",
     ],
     cmd = "bash $(location build_image.sh) " +
           "$$(dirname $(location @eb_corbos_toolkit//:BUILD.bazel)) " +
@@ -92,14 +91,14 @@ genrule(
 
 filegroup(
     name = "image",
-    srcs = [":fastdev-trixie-ebclfsa-ebcl-qemuarm64.wic"],
+    srcs = [":score-image-trixie-ebclfsa-ebcl-qemuarm64.wic"],
     tags = ["manual"],
     visibility = ["//visibility:public"],
 )
 
 filegroup(
     name = "kernel",
-    srcs = [":fastdev-trixie-ebclfsa-ebcl-qemuarm64-vmlinux"],
+    srcs = [":score-image-trixie-ebclfsa-ebcl-qemuarm64-vmlinux"],
     tags = ["manual"],
     visibility = ["//visibility:public"],
 )

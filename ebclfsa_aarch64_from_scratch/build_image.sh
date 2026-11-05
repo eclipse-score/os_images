@@ -110,7 +110,7 @@ DOCKER_CONFIG="$work/.docker" docker run --rm --init --privileged --user root \
     ' bash "$(id -u)" "$(id -g)"
 
 deploy="$work/build/tmp/deploy/images/ebcl-qemuarm64"
-for artifact in fastdev-trixie-ebclfsa-ebcl-qemuarm64{.wic,-vmlinux}; do
+for artifact in score-image-trixie-ebclfsa-ebcl-qemuarm64{.wic,-vmlinux}; do
     if [[ ! -f "$deploy/$artifact" ]]; then
         echo "Error: KAS did not produce the expected artifact: $deploy/$artifact" >&2
         exit 1

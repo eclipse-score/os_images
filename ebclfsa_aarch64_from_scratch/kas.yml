@@ -12,6 +12,8 @@
 # *******************************************************************************
 header:
   version: 18
+target:
+  - "score-image"
 repos:
   meta-score:
     path: meta-score
