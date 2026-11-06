@@ -22,8 +22,19 @@ IMAGE_PACKAGES = [
 
 exports_files(
     [
+        "config-overlay/etc/config/network",
         "build_image.sh",
+        "qemu_config.json",
     ],
+    visibility = ["//visibility:public"],
+)
+
+# Shared by both EBcLfSA image packages.
+pkg_tar(
+    name = "network_config_tar",
+    srcs = ["config-overlay/etc/config/network"],
+    mode = "0644",
+    package_dir = "/etc/config",
     visibility = ["//visibility:public"],
 )
 
@@ -33,7 +44,7 @@ pkg_deb(
     name = "network_config_deb",
     architecture = "all",
     conffiles = ["/etc/config/network"],
-    data = "//ebclfsa_aarch64:network_config_tar",
+    data = ":network_config_tar",
     description = "Eclipse S-CORE network configuration for EB corbos Linux for Safety Applications",
     homepage = "https://github.com/eclipse-score/os_images",
     maintainer = "Eclipse S-CORE contributors <score-dev@eclipse.org>",
@@ -100,5 +111,11 @@ filegroup(
     name = "kernel",
     srcs = [":score-image-trixie-ebclfsa-ebcl-qemuarm64-vmlinux"],
     tags = ["manual"],
+    visibility = ["//visibility:public"],
+)
+
+filegroup(
+    name = "qemu_config",
+    srcs = ["qemu_config.json"],
     visibility = ["//visibility:public"],
 )

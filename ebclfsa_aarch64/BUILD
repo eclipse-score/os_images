@@ -11,11 +11,8 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
-load("@rules_pkg//pkg:tar.bzl", "pkg_tar")
-
 exports_files(
     [
-        "config-overlay/etc/config/network",
         "build_image.sh",
     ],
     visibility = ["//visibility:public"],
@@ -35,13 +32,9 @@ genrule(
     visibility = ["//visibility:private"],
 )
 
-pkg_tar(
+alias(
     name = "network_config_tar",
-    srcs = [
-        "config-overlay/etc/config/network",
-    ],
-    mode = "0644",
-    package_dir = "/etc/config",
+    actual = "//ebclfsa_aarch64_from_scratch:network_config_tar",
     visibility = ["//visibility:public"],
 )
 
@@ -98,6 +91,6 @@ filegroup(
 
 filegroup(
     name = "qemu_config",
-    srcs = ["qemu_config.json"],
+    srcs = ["//ebclfsa_aarch64_from_scratch:qemu_config.json"],
     visibility = ["//visibility:public"],
 )

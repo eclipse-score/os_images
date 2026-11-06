@@ -21,10 +21,12 @@ py_test(
     srcs = ["test_qemu_config.py"],
     args = [
         "$(location //ebclfsa_aarch64:qemu_config)",
+        "$(location //ebclfsa_aarch64_from_scratch:qemu_config)",
         "$(location //ubuntu_x86_64:qemu_config)",
     ],
     data = [
         "//ebclfsa_aarch64:qemu_config",
+        "//ebclfsa_aarch64_from_scratch:qemu_config",
         "//ubuntu_x86_64:qemu_config",
     ],
     main = "test_qemu_config.py",
@@ -96,12 +98,12 @@ py_itf_test(
         "test_ping.py",
     ],
     args = [
-        "--qemu-config=$(location //ebclfsa_aarch64:qemu_config)",
+        "--qemu-config=$(location //ebclfsa_aarch64_from_scratch:qemu_config)",
         "--qemu-kernel=$(location //ebclfsa_aarch64_from_scratch:kernel)",
         "--qemu-rootfs=$(location //ebclfsa_aarch64_from_scratch:image)",
     ],
     data = [
-        "//ebclfsa_aarch64:qemu_config",
+        "//ebclfsa_aarch64_from_scratch:qemu_config",
         "//ebclfsa_aarch64_from_scratch:image",
         "//ebclfsa_aarch64_from_scratch:kernel",
     ],
@@ -159,14 +161,14 @@ py_itf_test(
         "test_opt_mount.py",
     ],
     args = [
-        "--qemu-config=$(location //ebclfsa_aarch64:qemu_config)",
+        "--qemu-config=$(location //ebclfsa_aarch64_from_scratch:qemu_config)",
         "--qemu-disk=$(location :qemu_disk_image)",
         "--qemu-kernel=$(location //ebclfsa_aarch64_from_scratch:kernel)",
         "--qemu-rootfs=$(location //ebclfsa_aarch64_from_scratch:image)",
     ],
     data = [
         ":qemu_disk_image",
-        "//ebclfsa_aarch64:qemu_config",
+        "//ebclfsa_aarch64_from_scratch:qemu_config",
         "//ebclfsa_aarch64_from_scratch:image",
         "//ebclfsa_aarch64_from_scratch:kernel",
     ],

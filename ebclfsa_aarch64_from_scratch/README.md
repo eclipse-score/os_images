@@ -37,6 +37,7 @@ to `bazel-bin/ebclfsa_aarch64_from_scratch/`.
 | --- | --- |
 | `:image` | The `.wic` disk image |
 | `:kernel` | The kernel required to boot the image |
+| `:qemu_config` | QEMU configuration shared with `//ebclfsa_aarch64` |
 | `:network_config_deb` | The `score-network-config` Debian package |
 
 ## Requirements
@@ -56,12 +57,12 @@ remote executor.
 ## Network configuration
 
 The image uses the same network configuration as `//ebclfsa_aarch64`
-([`network`](../ebclfsa_aarch64/config-overlay/etc/config/network)): static
+([`network`](config-overlay/etc/config/network)): static
 address `169.254.158.190/16` on `eth0`, gateway `169.254.21.88`, and a multicast
 route. The file is packaged as `score-network-config`, which [kas.yml](kas.yml)
 selects through `EBCLFSA_FASTDEV_NETWORK_CONFIG` in place of the toolkit's
 `ebclfsa-fastdev-network` package. It therefore matches the addresses in
-[`qemu_config.json`](../ebclfsa_aarch64/qemu_config.json).
+[`qemu_config.json`](qemu_config.json).
 
 ## Root SSH login
 
@@ -104,7 +105,7 @@ the same list.
 ## Tests
 
 The ping, multicast and no-disk QEMU integration tests boot the image with
-`//ebclfsa_aarch64:qemu_config`. The test is tagged `manual`, so
+`:qemu_config`. The test is tagged `manual`, so
 `bazel test --config=qemu-integration //tests/...` does not build this image:
 
 ```console

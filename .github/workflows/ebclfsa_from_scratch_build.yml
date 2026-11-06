@@ -16,8 +16,6 @@ on:
     types: [opened, reopened, synchronize]
     paths:
       - ebclfsa_aarch64_from_scratch/**
-      - ebclfsa_aarch64/config-overlay/**
-      - ebclfsa_aarch64/qemu_config.json
       - tests/**
       - MODULE.bazel
       - ebclfsa_aarch64/BUILD
