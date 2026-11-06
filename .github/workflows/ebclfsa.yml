@@ -10,7 +10,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
-name: "EBcLfSA from scratch: Build and Test"
+name: "EBcLfSA: Build and Test"
 on:
   pull_request:
     types: [opened, reopened, synchronize]
@@ -52,4 +52,4 @@ jobs:
           bazel build //ebclfsa_aarch64:image //ebclfsa_aarch64:kernel
       - name: Run QEMU integration tests
         run: |
-          bazel test --config=qemu-integration //tests:ebclfsa_from_scratch_qemu_test //tests:ebclfsa_from_scratch_opt_mount_qemu_test
+          bazel test --config=qemu-integration //tests:ebclfsa_qemu_test //tests:ebclfsa_qemu_opt_mount_test

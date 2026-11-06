@@ -112,6 +112,6 @@ The ping, multicast and no-disk QEMU integration tests boot the image with
 $ bazel test --config=qemu-integration //tests:ebclfsa_from_scratch_qemu_test //tests:ebclfsa_from_scratch_opt_mount_qemu_test
 ```
 
-The [EBcLfSA from scratch workflow](../.github/workflows/ebclfsa_from_scratch_build.yml)
+The [EBcLfSA workflow](../.github/workflows/ebclfsa.yml)
 builds the image and runs these tests when files of this package, the shared
 network or QEMU configuration, or the tests change. It can also be started manually.
