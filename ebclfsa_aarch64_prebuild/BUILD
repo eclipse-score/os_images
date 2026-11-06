@@ -18,6 +18,12 @@ exports_files(
     visibility = ["//visibility:public"],
 )
 
+# Debian packages also installed by //ebclfsa_aarch64:build-image.
+IMAGE_PACKAGES = [
+    "//ebclfsa_aarch64:network_config_deb",
+    "//ebclfsa_aarch64:sshd_config_deb",
+]
+
 genrule(
     name = "extract-fastdev-image",
     srcs = ["@eb_corbos_toolkit_fastdev_archive//file"],
@@ -32,19 +38,12 @@ genrule(
     visibility = ["//visibility:private"],
 )
 
-alias(
-    name = "network_config_tar",
-    actual = "//ebclfsa_aarch64:network_config_tar",
-    visibility = ["//visibility:public"],
-)
-
 genrule(
     name = "itf-image",
     srcs = [
         ":extract-fastdev-image",
-        ":network_config_tar",
         "build_image.sh",
-    ],
+    ] + IMAGE_PACKAGES,
     outs = [
         "ebcl-qemuarm64-itf/fastdev-trixie-ebclfsa-ebcl-qemuarm64.wic",
         "ebcl-qemuarm64-itf/fastdev-trixie-ebclfsa-ebcl-qemuarm64-vmlinux",
@@ -54,7 +53,8 @@ genrule(
             $(RULEDIR) \
             $(RULEDIR)/ebcl-qemuarm64 \
             $(RULEDIR)/ebcl-qemuarm64-itf \
-            $(location :network_config_tar)
+            $(location //ebclfsa_aarch64:network_config_deb) \
+            $(location //ebclfsa_aarch64:sshd_config_deb)
     """,
     tags = [
         "manual",

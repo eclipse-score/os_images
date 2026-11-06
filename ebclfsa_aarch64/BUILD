@@ -44,11 +44,13 @@ pkg_deb(
     name = "network_config_deb",
     architecture = "all",
     conffiles = ["/etc/config/network"],
+    conflicts = ["ebclfsa-fastdev-network"],
     data = ":network_config_tar",
     description = "Eclipse S-CORE network configuration for EB corbos Linux for Safety Applications",
     homepage = "https://github.com/eclipse-score/os_images",
     maintainer = "Eclipse S-CORE contributors <score-dev@eclipse.org>",
     package = "score-network-config",
+    replaces = ["ebclfsa-fastdev-network"],
     version = "1.0",
     visibility = ["//visibility:public"],
 )

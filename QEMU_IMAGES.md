@@ -10,8 +10,8 @@ can depend on them directly.
 | Package | Base | Architecture |
 | --- | --- | --- |
 | `//ubuntu_x86_64` | Ubuntu 24.04 minimal cloud image | x86_64 |
-| `//ebclfsa_aarch64_prebuild` | EB corbos Linux for Safety Applications fastdev image build from existing image | aarch64 |
 | `//ebclfsa_aarch64` | EB corbos Linux for Safety Applications fastdev image built from the toolkit's packages | aarch64 |
+| `//ebclfsa_aarch64_prebuild` | EB corbos Linux for Safety Applications fastdev image customized with shared Debian packages | aarch64 |
 
 All images expose `:image` and `:qemu_config`:
 The ebclfsa images additionally expose `:kernel` for the prebuilt image.
