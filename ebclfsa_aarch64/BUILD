@@ -22,7 +22,6 @@ IMAGE_PACKAGES = [
 
 exports_files(
     [
-        "config-overlay/etc/config/network",
         "build_image.sh",
         "qemu_config.json",
     ],
