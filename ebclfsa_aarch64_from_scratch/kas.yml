@@ -21,6 +21,6 @@ repos:
       .:
 local_conf_header:
   # Replace the toolkit's default network package (ebclfsa-fastdev-network) by
-  # the network configuration shared with //ebclfsa_aarch64.
+  # the network configuration shared with //ebclfsa_aarch64_prebuild.
   score_network: |
     EBCLFSA_FASTDEV_NETWORK_CONFIG = "score-network-config"

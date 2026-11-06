@@ -10,7 +10,7 @@ can depend on them directly.
 | Package | Base | Architecture |
 | --- | --- | --- |
 | `//ubuntu_x86_64` | Ubuntu 24.04 minimal cloud image | x86_64 |
-| `//ebclfsa_aarch64` | EB corbos Linux for Safety Applications fastdev image | aarch64 |
+| `//ebclfsa_aarch64_prebuild` | EB corbos Linux for Safety Applications fastdev image | aarch64 |
 
 [`//ebclfsa_aarch64_from_scratch`](./ebclfsa_aarch64_from_scratch/README.md)
 additionally builds the EBcLfSA image from the toolkit's packages with KAS/Isar
@@ -18,18 +18,18 @@ instead of modifying the prebuilt image. It uses the same network configuration
 and passwordless root SSH login, and is only built and tested when selected
 explicitly.
 
-Both packages expose `:image` and `:qemu_config`:
+Both EBcLfSA packages expose `:image` and `:qemu_config`:
 
 | Target | Content |
 | --- | --- |
 | `:image` | The customized disk image |
 | `:qemu_config` | `qemu_config.json` describing how to run the image |
 
-`//ebclfsa_aarch64` additionally exposes `:vanilla-image`, the unmodified base
-disk image.
+`//ebclfsa_aarch64_prebuild` additionally exposes `:vanilla-image`, the
+unmodified base disk image.
 
-`//ebclfsa_aarch64:kernel` additionally provides the kernel required to boot the
-aarch64 image.
+`//ebclfsa_aarch64_prebuild:kernel` additionally provides the kernel required to
+boot the aarch64 image.
 
 The image targets are tagged `manual`, since building them boots QEMU and needs
 the base images to be downloaded.
@@ -74,7 +74,7 @@ bazel_dep(name = "os_images", version = "1.0")
 $ sudo apt-get install -y cloud-image-utils qemu-system-arm \
       qemu-system-x86 qemu-utils sshpass
 $ bazel build //ubuntu_x86_64:image
-$ bazel build //ebclfsa_aarch64:image
+$ bazel build //ebclfsa_aarch64_prebuild:image
 ```
 
 Building the images requires KVM or falls back to slow TCG emulation.

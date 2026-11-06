@@ -20,7 +20,7 @@ without `ebclfsa-comfwdlib-sim` or `ebclfsa-li-demo`.
 It retains `ebclfsa-hi-cflinit` and its mandatory `ebclfsa-hi-demo` application
 for booting with the shared QEMU configuration.
 [kas.yml](kas.yml) selects it instead of `fastdev`.
-Unlike [`//ebclfsa_aarch64`](../ebclfsa_aarch64),
+Unlike [`//ebclfsa_aarch64_prebuild`](../ebclfsa_aarch64_prebuild),
 it neither downloads nor boots the toolkit's prebuilt disk image. The toolkit
 still supplies precompiled system packages, including the kernel; this is an
 image build from packages, not a source rebuild of the entire OS.
@@ -37,7 +37,7 @@ to `bazel-bin/ebclfsa_aarch64_from_scratch/`.
 | --- | --- |
 | `:image` | The `.wic` disk image |
 | `:kernel` | The kernel required to boot the image |
-| `:qemu_config` | QEMU configuration shared with `//ebclfsa_aarch64` |
+| `:qemu_config` | QEMU configuration shared with `//ebclfsa_aarch64_prebuild` |
 | `:network_config_deb` | The `score-network-config` Debian package |
 
 ## Requirements
@@ -56,7 +56,7 @@ remote executor.
 
 ## Network configuration
 
-The image uses the same network configuration as `//ebclfsa_aarch64`
+The image uses the same network configuration as `//ebclfsa_aarch64_prebuild`
 ([`network`](config-overlay/etc/config/network)): static
 address `169.254.158.190/16` on `eth0`, gateway `169.254.21.88`, and a multicast
 route. The file is packaged as `score-network-config`, which [kas.yml](kas.yml)
@@ -66,7 +66,7 @@ selects through `EBCLFSA_FASTDEV_NETWORK_CONFIG` in place of the toolkit's
 
 ## Root SSH login
 
-Like `//ebclfsa_aarch64:image`, the image permits passwordless root SSH login for
+Like `//ebclfsa_aarch64_prebuild:image`, the image permits passwordless root SSH login for
 integration testing. It must never be used in production.
 
 - The `score-itf-sshd-config` package installs

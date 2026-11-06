@@ -18,7 +18,6 @@ on:
       - ebclfsa_aarch64_from_scratch/**
       - tests/**
       - MODULE.bazel
-      - ebclfsa_aarch64/BUILD
       - .github/workflows/ebclfsa_from_scratch_build.yml
   workflow_dispatch:
 # Building the image takes long, do not keep outdated runs of a PR.
