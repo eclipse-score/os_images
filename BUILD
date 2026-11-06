@@ -27,7 +27,6 @@ copyright_checker(
         "autosd",
         "ebclfsa_aarch64",
         "ebclfsa_aarch64_from_scratch",
-        "scripts",
         "tests",
         "ubuntu_x86_64",
     ],

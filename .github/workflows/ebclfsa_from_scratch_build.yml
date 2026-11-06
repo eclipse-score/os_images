@@ -18,9 +18,9 @@ on:
       - ebclfsa_aarch64_from_scratch/**
       - ebclfsa_aarch64/config-overlay/**
       - ebclfsa_aarch64/qemu_config.json
-      - tests/test_multicast.py
-      - tests/test_no_disk.py
-      - tests/test_ping.py
+      - tests/**
+      - MODULE.bazel
+      - ebclfsa_aarch64/BUILD
       - .github/workflows/ebclfsa_from_scratch_build.yml
   workflow_dispatch:
 # Building the image takes long, do not keep outdated runs of a PR.
