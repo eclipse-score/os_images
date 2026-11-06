@@ -25,8 +25,8 @@ py_test(
         "$(location //ubuntu_x86_64:qemu_config)",
     ],
     data = [
-        "//ebclfsa_aarch64_prebuild:qemu_config",
         "//ebclfsa_aarch64:qemu_config",
+        "//ebclfsa_aarch64_prebuild:qemu_config",
         "//ubuntu_x86_64:qemu_config",
     ],
     main = "test_qemu_config.py",
@@ -103,9 +103,9 @@ py_itf_test(
         "--qemu-rootfs=$(location //ebclfsa_aarch64:image)",
     ],
     data = [
-        "//ebclfsa_aarch64:qemu_config",
         "//ebclfsa_aarch64:image",
         "//ebclfsa_aarch64:kernel",
+        "//ebclfsa_aarch64:qemu_config",
     ],
     plugins = ["@score_itf//score/itf/plugins:qemu_plugin"],
     # Building the image takes long, so the test only runs when selected
@@ -168,9 +168,9 @@ py_itf_test(
     ],
     data = [
         ":qemu_disk_image",
-        "//ebclfsa_aarch64:qemu_config",
         "//ebclfsa_aarch64:image",
         "//ebclfsa_aarch64:kernel",
+        "//ebclfsa_aarch64:qemu_config",
     ],
     plugins = ["@score_itf//score/itf/plugins:qemu_plugin"],
     # Building the image takes long, so the test only runs when selected
