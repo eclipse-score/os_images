@@ -85,7 +85,7 @@ http_file(
 # EB corbos Toolkit sources used to build the aarch64 image from scratch
 #
 # Only the KAS configuration, the bundled Isar layers and the development
-# container setup are used, see //ebclfsa_aarch64_from_scratch.
+# container setup are used, see //ebclfsa_aarch64.
 #
 ###############################################################################
 new_git_repository = use_repo_rule("@bazel_tools//tools/build_defs/repo:git.bzl", "new_git_repository")

@@ -34,7 +34,7 @@ genrule(
 
 alias(
     name = "network_config_tar",
-    actual = "//ebclfsa_aarch64_from_scratch:network_config_tar",
+    actual = "//ebclfsa_aarch64:network_config_tar",
     visibility = ["//visibility:public"],
 )
 
@@ -91,6 +91,6 @@ filegroup(
 
 filegroup(
     name = "qemu_config",
-    srcs = ["//ebclfsa_aarch64_from_scratch:qemu_config.json"],
+    srcs = ["//ebclfsa_aarch64:qemu_config.json"],
     visibility = ["//visibility:public"],
 )

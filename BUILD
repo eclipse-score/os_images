@@ -26,7 +26,7 @@ copyright_checker(
         "MODULE.bazel",
         "autosd",
         "ebclfsa_aarch64_prebuild",
-        "ebclfsa_aarch64_from_scratch",
+        "ebclfsa_aarch64",
         "tests",
         "ubuntu_x86_64",
     ],

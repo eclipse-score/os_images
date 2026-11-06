@@ -15,7 +15,7 @@ on:
   pull_request:
     types: [opened, reopened, synchronize]
     paths:
-      - ebclfsa_aarch64_from_scratch/**
+      - ebclfsa_aarch64/**
       - tests/**
       - MODULE.bazel
       - .github/workflows/ebclfsa_from_scratch_build.yml
@@ -49,7 +49,7 @@ jobs:
           sudo sysctl kernel.apparmor_restrict_unprivileged_userns=0
       - name: Build EBcLfSA image from scratch
         run: |
-          bazel build //ebclfsa_aarch64_from_scratch:image //ebclfsa_aarch64_from_scratch:kernel
+          bazel build //ebclfsa_aarch64:image //ebclfsa_aarch64:kernel
       - name: Run QEMU integration tests
         run: |
           bazel test --config=qemu-integration //tests:ebclfsa_from_scratch_qemu_test //tests:ebclfsa_from_scratch_opt_mount_qemu_test

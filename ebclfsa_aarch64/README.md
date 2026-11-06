@@ -26,12 +26,12 @@ still supplies precompiled system packages, including the kernel; this is an
 image build from packages, not a source rebuild of the entire OS.
 
 ```console
-$ bazel build //ebclfsa_aarch64_from_scratch:image //ebclfsa_aarch64_from_scratch:kernel
+$ bazel build //ebclfsa_aarch64:image //ebclfsa_aarch64:kernel
 ```
 
 The build takes a long time, so all image targets are tagged `manual` and are
 only built when selected explicitly. The kernel and `.wic` disk image are written
-to `bazel-bin/ebclfsa_aarch64_from_scratch/`.
+to `bazel-bin/ebclfsa_aarch64/`.
 
 | Target | Content |
 | --- | --- |
@@ -89,8 +89,8 @@ the image. The [build script](build_image.sh) accepts zero or more Debian packag
 paths after its three fixed arguments:
 
 ```console
-$ bash ebclfsa_aarch64_from_scratch/build_image.sh \
-    /path/to/toolkit ebclfsa_aarch64_from_scratch/kas.yml \
+$ bash ebclfsa_aarch64/build_image.sh \
+    /path/to/toolkit ebclfsa_aarch64/kas.yml \
     /existing/output/directory \
     /path/to/first.deb "/path/to/another package.deb"
 ```
