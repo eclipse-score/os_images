@@ -23,6 +23,9 @@ IMAGE_PACKAGES = [
 exports_files(
     [
         "build_image.sh",
+        "kas.yml",
+        "meta-score/conf/layer.conf",
+        "meta-score/recipes-images/score-image/score-image_1.0.bb",
         "qemu_config.json",
     ],
     visibility = ["//visibility:public"],
