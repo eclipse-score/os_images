@@ -37,6 +37,8 @@ jobs:
         uses: actions/checkout@v7
       - name: Setup Bazel
         uses: bazel-contrib/setup-bazel@0.19.1
+      - name: Test image build script
+        run: bash ebclfsa_aarch64/build_image_test.sh
       - name: Install qemu
         run: |
           sudo apt-get update

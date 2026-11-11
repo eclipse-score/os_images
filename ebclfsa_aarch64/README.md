@@ -115,3 +115,37 @@ $ bazel test --config=qemu-integration //tests:ebclfsa_from_scratch_qemu_test //
 The [EBcLfSA workflow](../.github/workflows/ebclfsa.yml)
 builds the image and runs these tests when files of this package, the shared
 network or QEMU configuration, or the tests change. It can also be started manually.
+
+## Release images and SDKs
+
+The [release workflow](../.github/workflows/release.yml) runs when a GitHub
+release is published, including prereleases. It checks out the release tag and
+builds `score-image` and its matching SDK for QEMU aarch64 (`ebcl-qemuarm64`)
+and Raspberry Pi 4B (`rpi4b`).
+
+The same builds can be run locally:
+
+```console
+$ bazel build //ebclfsa_aarch64:release-ebcl-qemuarm64 //ebclfsa_aarch64:release-rpi4b
+```
+
+Outputs are written to `bazel-bin/ebclfsa_aarch64/release/<machine>/`.
+For each machine, the workflow attaches these assets to the existing release,
+following the upstream toolkit's archive layout:
+
+- `score-image-trixie-ebclfsa-<machine>.tar.gz`: disk image, kernel and image
+  SPDX metadata.
+- `score-image-sdk-trixie-ebclfsa-<machine>.tar.gz`: cross-compilation SDK sysroot.
+- `score-image-sdk-trixie-ebclfsa-<machine>.spdx.json`: SDK SPDX metadata.
+- `score-image-trixie-ebclfsa-<machine>.sha256`: checksums of the three assets.
+
+The Raspberry Pi build uses the toolkit's Raspberry Pi BSP, boot files and
+fstab configuration; the additional `/opt` disk mount is QEMU-only. Both images
+retain the S-CORE network configuration and passwordless root SSH login described
+above and are **for integration testing, not production**. Generated SSH private
+keys are not published.
+
+Both platform builds must succeed before any assets are published. Re-running a
+successful workflow replaces assets with the same names. If releases are created
+by another workflow using `GITHUB_TOKEN`, GitHub will not trigger this workflow;
+use a GitHub App token or personal access token for that release creation instead.
