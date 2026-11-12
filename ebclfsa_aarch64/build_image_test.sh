@@ -64,7 +64,11 @@ docker() {
     truncate -s 1M "$deploy/$image.wic"
     printf kernel > "$deploy/$image-vmlinux"
     printf '{}' > "$deploy/$image.spdx.json"
-    touch "$deploy/$image-ssh-target-key"
+    if [[ ${omit_key:-false} == false ]]; then
+        printf 'development login key fixture for %s\n' "$test_machine" > "$deploy/$image-ssh-target-key"
+        chmod 0600 "$deploy/$image-ssh-target-key"
+    fi
+    touch "$deploy/ssh_host_ed25519_key"
     if [[ ${omit_sdk:-false} == false ]]; then
         tar -czf "$deploy/$sdk.tar.gz" --files-from /dev/null
         printf '{}' > "$deploy/$sdk.spdx.json"
@@ -92,11 +96,18 @@ for test_machine in ebcl-qemuarm64 rpi4b; do
         cd "$output"
         sha256sum --check "$image.sha256"
         tar -tzf "$image.tar.gz" > contents
-        [[ $(wc -l < contents) == 3 ]]
+        [[ $(wc -l < contents) == 4 ]]
         grep -Fx "$image.wic" contents
         grep -Fx "$image-vmlinux" contents
         grep -Fx "$image.spdx.json" contents
-        ! grep -Fq ssh-target-key contents
+        grep -Fx "$image-ssh-target-key" contents
+        if grep -Fq ssh_host contents; then
+            echo "Error: image archive includes SSH server host keys" >&2
+            exit 1
+        fi
+        tar -xzf "$image.tar.gz" "$image-ssh-target-key"
+        [[ $(cat "$image-ssh-target-key") == "development login key fixture for $test_machine" ]]
+        [[ $(stat -c %a "$image-ssh-target-key") == 600 ]]
     )
 done
 
@@ -110,6 +121,18 @@ if bash "$script" --release "$test_machine" "$fixture/toolkit" \
 fi
 grep -F 'KAS did not produce the expected artifact:' "$fixture/missing.log"
 [[ -z $(find "$fixture/missing" -mindepth 1 -print -quit) ]]
+
+export omit_sdk=false omit_key=true
+mkdir "$fixture/missing-key"
+if bash "$script" --release "$test_machine" "$fixture/toolkit" \
+    "$fixture/source/kas.yml" "$fixture/missing-key" "$fixture/score-test.deb" \
+    > "$fixture/missing-key.log" 2>&1; then
+    echo "Error: missing SSH login key did not fail the build" >&2
+    exit 1
+fi
+grep -F "KAS did not produce the expected artifact:" "$fixture/missing-key.log" \
+    | grep -F "$image-ssh-target-key"
+[[ -z $(find "$fixture/missing-key" -mindepth 1 -print -quit) ]]
 
 if bash "$script" --release invalid "$fixture/toolkit" \
     "$fixture/source/kas.yml" "$fixture/missing" > "$fixture/invalid.log" 2>&1; then

@@ -154,7 +154,7 @@ image="score-image-trixie-ebclfsa-$machine"
 sdk="score-image-sdk-trixie-ebclfsa-$machine"
 artifacts=("$image.wic" "$image-vmlinux")
 if [[ "$release" == true ]]; then
-    artifacts+=("$image.spdx.json" "$sdk.tar.gz" "$sdk.spdx.json")
+    artifacts+=("$image.spdx.json" "$image-ssh-target-key" "$sdk.tar.gz" "$sdk.spdx.json")
 fi
 for artifact in "${artifacts[@]}"; do
     if [[ ! -f "$deploy/$artifact" ]]; then
@@ -167,9 +167,9 @@ for artifact in "${artifacts[@]}"; do
 done
 
 if [[ "$release" == true ]]; then
-    # Only public image artifacts are packaged, never generated SSH private keys.
+    # Publish only the development login key, never SSH server host keys.
     tar --sparse -czf "$output/$image.tar.gz" -C "$deploy" \
-        "$image.wic" "$image-vmlinux" "$image.spdx.json"
+        "$image.wic" "$image-vmlinux" "$image.spdx.json" "$image-ssh-target-key"
     cp -L "$deploy/$sdk.tar.gz" "$deploy/$sdk.spdx.json" "$output/"
     (
         cd "$output"
