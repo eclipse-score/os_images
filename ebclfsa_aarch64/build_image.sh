@@ -110,7 +110,10 @@ header:
     - "kas/machines/public/rpi4b.yml"
 EOF
 else
-    printf 'header:\n  version: 18\n' > "$work/kas/score-bsp.yml"
+    cat > "$work/kas/score-bsp.yml" <<EOF
+header:
+  version: 18
+EOF
 fi
 
 # Match the toolkit's v18 container, pinned independently of its mutable tag.
