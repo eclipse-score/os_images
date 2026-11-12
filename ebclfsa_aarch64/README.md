@@ -109,7 +109,7 @@ The ping, multicast and no-disk QEMU integration tests boot the image with
 `bazel test --config=qemu-integration //tests/...` does not build this image:
 
 ```console
-$ bazel test --config=qemu-integration //tests:ebclfsa_from_scratch_qemu_test //tests:ebclfsa_from_scratch_opt_mount_qemu_test
+$ bazel test --config=qemu-integration //tests:ebclfsa_qemu_test //tests:ebclfsa_qemu_opt_mount_test
 ```
 
 The [EBcLfSA workflow](../.github/workflows/ebclfsa.yml)
