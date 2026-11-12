@@ -154,3 +154,10 @@ filegroup(
         "rpi4b",
     ]
 ]
+
+sh_test(
+    name = "build_image_test",
+    srcs = ["build_image_test.sh"],
+    data = [":build_image.sh"],
+    visibility = ["//visibility:private"],
+)
