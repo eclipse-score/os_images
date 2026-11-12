@@ -98,7 +98,7 @@ done
 # Mount an additional disk (ITF "--qemu-disk") on /opt. "nofail" keeps the image
 # bootable when no such disk is attached; crinit runs "mount -a" during boot.
 sshpass -p linux ssh -o StrictHostKeyChecking=no -p 2222 root@localhost "printf '\n# Additional disk attached by the ITF QEMU plugin\n/dev/vdb\t/opt\tauto\tdefaults,nofail\t0\t0\n' >> /etc/fstab"
-sshpass -p linux ssh -o StrictHostKeyChecking=no -p 2222 root@localhost "sed -i 's/^root:[^:]*:/root::/' /etc/shadow && sync && crinit-ctl poweroff" || true
+sshpass -p linux ssh -o StrictHostKeyChecking=no -p 2222 root@localhost "sync && crinit-ctl poweroff" || true
 
 if [[ -f "${WORKING_DIR}/qemu.pid" ]]; then
     wait "$(cat "${WORKING_DIR}/qemu.pid")" 2>/dev/null || true

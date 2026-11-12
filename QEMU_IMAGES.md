@@ -25,6 +25,29 @@ The ebclfsa images additionally expose `:kernel` for the prebuilt image.
 `//ebclfsa_aarch64_prebuild` additionally exposes `:vanilla-image`, the
 unmodified base disk image.
 
+The prebuilt EBcLfSA image preserves the release's root password and SSH
+configuration. Its `:ssh_target_key` target downloads the matching public
+development key from the toolkit release. Its generated `:qemu_config` sets
+ITF's native `ssh_auth.pkey_path` to the key's runfiles path. Include the key
+in the test's `data` alongside the image and configuration:
+
+```starlark
+args = [
+    "--qemu-config=$(location //ebclfsa_aarch64_prebuild:qemu_config)",
+    "--qemu-kernel=$(location //ebclfsa_aarch64_prebuild:kernel)",
+    "--qemu-rootfs=$(location //ebclfsa_aarch64_prebuild:image)",
+]
+data = [
+    "//ebclfsa_aarch64_prebuild:image",
+    "//ebclfsa_aarch64_prebuild:kernel",
+    "//ebclfsa_aarch64_prebuild:qemu_config",
+    "//ebclfsa_aarch64_prebuild:ssh_target_key",
+]
+```
+
+ITF 0.7.0 uses this configuration for both SSH and SFTP, including its pre-test
+connection checks; no local ITF patches or SSH agent setup are required.
+
 The image targets are tagged `manual`, since building them boots QEMU and needs
 the base images to be downloaded.
 
@@ -83,5 +106,7 @@ $ bazel test --config=qemu-integration //tests/...
 
 ## Security note
 
-The resulting images permit passwordless root SSH login. They are meant for
-integration testing only and must never be used in production.
+The Ubuntu and source-built EBcLfSA images permit passwordless root SSH login.
+The prebuilt EBcLfSA image uses the toolkit release's publicly available
+development SSH key and retains its default root password. All these images
+are meant for integration testing only and must never be used in production.

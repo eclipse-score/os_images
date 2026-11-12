@@ -18,10 +18,9 @@ exports_files(
     visibility = ["//visibility:public"],
 )
 
-# Debian packages also installed by //ebclfsa_aarch64:build-image.
+# Preserve the base image's SSH configuration and root password.
 IMAGE_PACKAGES = [
     "//ebclfsa_aarch64:network_config_deb",
-    "//ebclfsa_aarch64:sshd_config_deb",
 ]
 
 genrule(
@@ -53,8 +52,7 @@ genrule(
             $(RULEDIR) \
             $(RULEDIR)/ebcl-qemuarm64 \
             $(RULEDIR)/ebcl-qemuarm64-itf \
-            $(location //ebclfsa_aarch64:network_config_deb) \
-            $(location //ebclfsa_aarch64:sshd_config_deb)
+            $(location //ebclfsa_aarch64:network_config_deb)
     """,
     tags = [
         "manual",
@@ -90,7 +88,19 @@ filegroup(
 )
 
 filegroup(
+    name = "ssh_target_key",
+    srcs = ["@eb_corbos_toolkit_target_key//file"],
+    visibility = ["//visibility:public"],
+)
+
+genrule(
     name = "qemu_config",
-    srcs = ["//ebclfsa_aarch64:qemu_config.json"],
+    srcs = [
+        ":ssh_target_key",
+        "//ebclfsa_aarch64:qemu_config.json",
+    ],
+    outs = ["qemu_config.json"],
+    # ITF resolves the key from the test's runfiles working directory.
+    cmd = """sed '1a\\    "ssh_auth": {"pkey_path": "$(rootpath :ssh_target_key)"},' $(location //ebclfsa_aarch64:qemu_config.json) > $@""",
     visibility = ["//visibility:public"],
 )

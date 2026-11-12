@@ -101,6 +101,7 @@ py_itf_test(
         "test_multicast.py",
         "test_no_disk.py",
         "test_ping.py",
+        "test_ssh_auth.py",
     ],
     args = [
         "--qemu-config=$(location //ebclfsa_aarch64_prebuild:qemu_config)",
@@ -111,6 +112,7 @@ py_itf_test(
         "//ebclfsa_aarch64_prebuild:image",
         "//ebclfsa_aarch64_prebuild:kernel",
         "//ebclfsa_aarch64_prebuild:qemu_config",
+        "//ebclfsa_aarch64_prebuild:ssh_target_key",
     ],
     plugins = ["@score_itf//score/itf/plugins:qemu_plugin"],
     tags = [
@@ -178,6 +180,7 @@ py_itf_test(
         "//ebclfsa_aarch64_prebuild:image",
         "//ebclfsa_aarch64_prebuild:kernel",
         "//ebclfsa_aarch64_prebuild:qemu_config",
+        "//ebclfsa_aarch64_prebuild:ssh_target_key",
     ],
     plugins = ["@score_itf//score/itf/plugins:qemu_plugin"],
     tags = [
