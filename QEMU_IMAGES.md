@@ -111,7 +111,7 @@ bazel_dep(name = "os_images", version = "1.0")
 
 ```console
 $ sudo apt-get install -y cloud-image-utils qemu-system-arm \
-      qemu-system-x86 qemu-utils sshpass openssh-client
+      qemu-system-x86 qemu-utils openssh-client
 $ bazel build //ubuntu_x86_64:image
 $ bazel build //ebclfsa_aarch64_prebuild:image
 ```

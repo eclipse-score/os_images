@@ -41,6 +41,7 @@ genrule(
     name = "itf-image",
     srcs = [
         ":extract-fastdev-image",
+        ":ssh_target_key",
         "build_image.sh",
     ] + IMAGE_PACKAGES,
     outs = [
@@ -52,6 +53,7 @@ genrule(
             $(RULEDIR) \
             $(RULEDIR)/ebcl-qemuarm64 \
             $(RULEDIR)/ebcl-qemuarm64-itf \
+            $(location :ssh_target_key) \
             $(location //ebclfsa_aarch64:network_config_deb)
     """,
     tags = [
