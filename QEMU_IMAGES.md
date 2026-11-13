@@ -48,6 +48,28 @@ data = [
 ITF 0.7.0 uses this configuration for both SSH and SFTP, including its pre-test
 connection checks; no local ITF patches or SSH agent setup are required.
 
+The Ubuntu image uses a build-generated Ed25519 key pair. Only the public key
+is installed in root's `authorized_keys`; the root password is locked, and SSH
+password and keyboard-interactive authentication are disabled. The private key
+is exposed as `//ubuntu_x86_64:ssh_target_key` and referenced by the generated
+`:qemu_config`. Include it in each test's `data`:
+
+```starlark
+args = [
+    "--qemu-config=$(location //ubuntu_x86_64:qemu_config)",
+    "--qemu-rootfs=$(location //ubuntu_x86_64:image)",
+]
+data = [
+    "//ubuntu_x86_64:image",
+    "//ubuntu_x86_64:qemu_config",
+    "//ubuntu_x86_64:ssh_target_key",
+]
+```
+
+The key pair and image are cached Bazel artifacts: keep the matching private key
+with the image for testing. No private keys are committed to the repository.
+`//ubuntu_x86_64:cloud_init` provides the rendered user-data and meta-data.
+
 The image targets are tagged `manual`, since building them boots QEMU and needs
 the base images to be downloaded.
 
@@ -89,7 +111,7 @@ bazel_dep(name = "os_images", version = "1.0")
 
 ```console
 $ sudo apt-get install -y cloud-image-utils qemu-system-arm \
-      qemu-system-x86 qemu-utils sshpass
+      qemu-system-x86 qemu-utils sshpass openssh-client
 $ bazel build //ubuntu_x86_64:image
 $ bazel build //ebclfsa_aarch64_prebuild:image
 ```
@@ -106,7 +128,9 @@ $ bazel test --config=qemu-integration //tests/...
 
 ## Security note
 
-The Ubuntu and source-built EBcLfSA images permit passwordless root SSH login.
+The source-built EBcLfSA image permits empty-password root SSH login.
+The Ubuntu image uses a build-generated development SSH key for root login
+with password authentication disabled.
 The prebuilt EBcLfSA image uses the toolkit release's publicly available
 development SSH key and retains its default root password. All these images
 are meant for integration testing only and must never be used in production.

@@ -54,6 +54,7 @@ py_itf_test(
         "test_multicast.py",
         "test_no_disk.py",
         "test_ping.py",
+        "test_ssh_auth.py",
     ],
     args = [
         "--qemu-config=$(location //ubuntu_x86_64:qemu_config)",
@@ -62,6 +63,7 @@ py_itf_test(
     data = [
         "//ubuntu_x86_64:image",
         "//ubuntu_x86_64:qemu_config",
+        "//ubuntu_x86_64:ssh_target_key",
     ],
     plugins = ["@score_itf//score/itf/plugins:qemu_plugin"],
     tags = ["qemu-integration"],
@@ -104,6 +106,8 @@ py_itf_test(
         "test_ssh_auth.py",
     ],
     args = [
+        # The release retains its non-empty root password; only Ubuntu is key-only.
+        "-k=not test_key_only_root_login",
         "--qemu-config=$(location //ebclfsa_aarch64_prebuild:qemu_config)",
         "--qemu-kernel=$(location //ebclfsa_aarch64_prebuild:kernel)",
         "--qemu-rootfs=$(location //ebclfsa_aarch64_prebuild:image)",
@@ -133,6 +137,7 @@ py_itf_test(
         ":qemu_disk_image",
         "//ubuntu_x86_64:image",
         "//ubuntu_x86_64:qemu_config",
+        "//ubuntu_x86_64:ssh_target_key",
     ],
     plugins = ["@score_itf//score/itf/plugins:qemu_plugin"],
     tags = ["qemu-integration"],
