@@ -70,6 +70,13 @@ The key pair and image are cached Bazel artifacts: keep the matching private key
 with the image for testing. No private keys are committed to the repository.
 `//ubuntu_x86_64:cloud_init` provides the rendered user-data and meta-data.
 
+The source-built EBcLfSA image uses the toolkit's built-in development key
+generation. Its `:ssh_target_key` exports the private key produced alongside the
+image, and its generated `:qemu_config` references that key for ITF SSH and SFTP.
+Include `//ebclfsa_aarch64:ssh_target_key` in test `data` alongside the image,
+kernel and configuration. The root password is locked and SSH password
+authentication is disabled. See its [README](ebclfsa_aarch64/README.md) for details.
+
 The image targets are tagged `manual`, since building them boots QEMU and needs
 the base images to be downloaded.
 
@@ -128,9 +135,8 @@ $ bazel test --config=qemu-integration //tests/...
 
 ## Security note
 
-The source-built EBcLfSA image permits empty-password root SSH login.
-The Ubuntu image uses a build-generated development SSH key for root login
-with password authentication disabled.
+The source-built EBcLfSA and Ubuntu images use build-generated development SSH
+keys for root login with password authentication disabled.
 The prebuilt EBcLfSA image uses the toolkit release's publicly available
 development SSH key and retains its default root password. All these images
 are meant for integration testing only and must never be used in production.

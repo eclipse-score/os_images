@@ -11,6 +11,8 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
+load("//:qemu_config.bzl", "qemu_config")
+
 exports_files(
     [
         "build_image.sh",
@@ -95,14 +97,10 @@ filegroup(
     visibility = ["//visibility:public"],
 )
 
-genrule(
+qemu_config(
     name = "qemu_config",
-    srcs = [
-        ":ssh_target_key",
-        "//ebclfsa_aarch64:qemu_config.json",
-    ],
-    outs = ["qemu_config.json"],
-    # ITF resolves the key from the test's runfiles working directory.
-    cmd = """sed '1a\\    "ssh_auth": {"pkey_path": "$(rootpath :ssh_target_key)"},' $(location //ebclfsa_aarch64:qemu_config.json) > $@""",
+    out = "qemu_config.json",
+    key = ":ssh_target_key",
+    template = "//ebclfsa_aarch64:qemu_config.template.json",
     visibility = ["//visibility:public"],
 )

@@ -76,6 +76,7 @@ py_itf_test(
         "test_multicast.py",
         "test_no_disk.py",
         "test_ping.py",
+        "test_ssh_auth.py",
     ],
     args = [
         "--qemu-config=$(location //ebclfsa_aarch64:qemu_config)",
@@ -86,6 +87,7 @@ py_itf_test(
         "//ebclfsa_aarch64:image",
         "//ebclfsa_aarch64:kernel",
         "//ebclfsa_aarch64:qemu_config",
+        "//ebclfsa_aarch64:ssh_target_key",
     ],
     plugins = ["@score_itf//score/itf/plugins:qemu_plugin"],
     # Building the image takes long, so the test only runs when selected
@@ -106,7 +108,7 @@ py_itf_test(
         "test_ssh_auth.py",
     ],
     args = [
-        # The release retains its non-empty root password; only Ubuntu is key-only.
+        # Unlike the built images, the release retains its non-empty root password.
         "-k=not test_key_only_root_login",
         "--qemu-config=$(location //ebclfsa_aarch64_prebuild:qemu_config)",
         "--qemu-kernel=$(location //ebclfsa_aarch64_prebuild:kernel)",
@@ -158,6 +160,7 @@ py_itf_test(
         "//ebclfsa_aarch64:image",
         "//ebclfsa_aarch64:kernel",
         "//ebclfsa_aarch64:qemu_config",
+        "//ebclfsa_aarch64:ssh_target_key",
     ],
     plugins = ["@score_itf//score/itf/plugins:qemu_plugin"],
     # Building the image takes long, so the test only runs when selected
