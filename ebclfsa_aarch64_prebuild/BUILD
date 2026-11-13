@@ -20,9 +20,10 @@ exports_files(
     visibility = ["//visibility:public"],
 )
 
-# Preserve the base image's SSH configuration and root password.
+# Debian packages also installed by //ebclfsa_aarch64:build-image.
 IMAGE_PACKAGES = [
     "//ebclfsa_aarch64:network_config_deb",
+    "//ebclfsa_aarch64:sshd_config_deb",
 ]
 
 genrule(
@@ -56,7 +57,8 @@ genrule(
             $(RULEDIR)/ebcl-qemuarm64 \
             $(RULEDIR)/ebcl-qemuarm64-itf \
             $(location :ssh_target_key) \
-            $(location //ebclfsa_aarch64:network_config_deb)
+            $(location //ebclfsa_aarch64:network_config_deb) \
+            $(location //ebclfsa_aarch64:sshd_config_deb)
     """,
     tags = [
         "manual",

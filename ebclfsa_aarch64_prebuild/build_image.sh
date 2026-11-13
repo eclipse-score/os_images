@@ -108,6 +108,8 @@ for src in "${DEPLOY_SRCS[@]}"; do
     ssh "${SSH_OPTIONS[@]}" -p 2222 root@localhost "rm -f /$(basename "${src}")"
 done
 
+ssh "${SSH_OPTIONS[@]}" -p 2222 root@localhost "passwd -l root"
+
 # Mount an additional disk (ITF "--qemu-disk") on /opt. "nofail" keeps the image
 # bootable when no such disk is attached; crinit runs "mount -a" during boot.
 ssh "${SSH_OPTIONS[@]}" -p 2222 root@localhost "printf '\n# Additional disk attached by the ITF QEMU plugin\n/dev/vdb\t/opt\tauto\tdefaults,nofail\t0\t0\n' >> /etc/fstab"
