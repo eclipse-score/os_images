@@ -136,7 +136,7 @@ $ ssh -o IdentitiesOnly=yes -i score-image-trixie-ebclfsa-ebcl-qemuarm64-ssh-tar
 ```
 
 For Raspberry Pi, use the `rpi4b` key instead and the device's reachable IP
-address. Key-based login remains available if passwordless login is removed.
+address. Key-based login is the only means to login via SSH.
 These keys are deliberately public development credentials: anyone downloading
 the release can log in as root on a reachable image. Use only on isolated test
 networks, never reuse the keys elsewhere, and replace the authorized key and

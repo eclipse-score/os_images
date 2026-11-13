@@ -103,8 +103,7 @@ $ bazel test --config=qemu-integration //tests/...
 
 ## Security note
 
-The source-built EBcLfSA and Ubuntu images use build-generated development SSH
+The EBcLfSA and Ubuntu images use build-generated development SSH
 keys for root login with password authentication disabled.
-The prebuilt EBcLfSA image uses the toolkit release's publicly available
-development SSH key and retains its default root password. All these images
+All these images
 are meant for integration testing only and must never be used in production.
