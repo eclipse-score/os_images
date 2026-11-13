@@ -56,6 +56,7 @@ def test_key_only_root_login(target):
 def test_empty_password_login_is_rejected(target, config):
     # The target fixture ensures SSH is ready before attempting authentication.
     with paramiko.SSHClient() as client:
+        # codeql[py/paramiko-missing-host-key-validation] -- Connection is done to a local QEMU target for testing purposes and it is a failure if connection actually works
         client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         with pytest.raises(paramiko.AuthenticationException):
             client.connect(
