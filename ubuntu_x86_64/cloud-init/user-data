@@ -67,18 +67,6 @@ write_files:
     content: |
       network: {config: disabled}
 
-  # # OpenSSH uses the first value found, before cloud-init's 50-*.conf.
-  # - path: /etc/ssh/sshd_config.d/00-score-itf.conf
-  #   permissions: "0644"
-  #   owner: root:root
-  #   content: |
-  #     PermitRootLogin prohibit-password
-  #     PermitEmptyPasswords no
-  #     PasswordAuthentication no
-  #     KbdInteractiveAuthentication no
-  #     PubkeyAuthentication yes
-  #     UseDNS no
-
 runcmd:
   # A single fail-fast script: build_image.sh treats the absence of the marker
   # printed at the very end as a build failure, so a partially customized image
