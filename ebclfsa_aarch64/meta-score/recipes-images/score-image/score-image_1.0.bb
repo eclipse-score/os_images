@@ -90,7 +90,8 @@ WIC_CREATE_EXTRA_ARGS:append = " --no-fstab-update"
 EBCL_SSH_TARGET_ACCESS = "1"
 
 # Run after image_postprocess_accounts sets the toolkit's default root password.
-ROOTFS_POSTPROCESS_COMMAND:append = " score_lock_root score_opt_mount"
+ROOTFS_POSTPROCESS_COMMAND:append = " score_lock_root ${@'score_opt_mount' if d.getVar('MACHINE') == 'ebcl-qemuarm64' else ''}"
+ROOTFS_POSTPROCESS_COMMAND:remove:class-sdk = "score_lock_root score_opt_mount"
 
 score_lock_root() {
     sudo chroot '${ROOTFSDIR}' passwd -l root
