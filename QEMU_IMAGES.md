@@ -11,7 +11,7 @@ can depend on them directly.
 | --- | --- | --- |
 | `ubuntu_x86_64` | Ubuntu 24.04 minimal cloud image | x86_64 |
 | `ebclfsa_aarch64` | EB corbos Linux for Safety Applications built from the toolkit's packages | aarch64 |
-| `ebclfsa_aarch64_prebuild` | EBcLfSA release archive, optionally customized with Debian packages | aarch64 |
+| `ebclfsa_aarch64_prebuild` | Makro for downloading and customizing the prebuilt EBcLfSA image | aarch64 |
 
 All images expose `:image`, `:ssh_target_key` and `:qemu_config`.
 The ebclfsa images additionally expose `:kernel` for the prebuilt image.
@@ -23,7 +23,7 @@ The ebclfsa images additionally expose `:kernel` for the prebuilt image.
 | `:kernel` | The kernel for the EBcLfSA images |
 | `:qemu_config` | `qemu_config.json` describing how to run the image, preconfigured with the SSH key path |
 
-`//ebclfsa_aarch64_prebuild` additionally exposes `:vanilla-image`, the
+`ebclfsa_aarch64_prebuild()` additionally exposes `:vanilla-image`, the
 unmodified base disk image.
 
 The generated `:qemu_config` sets

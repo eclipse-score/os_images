@@ -24,7 +24,7 @@ py_test(
 )
 
 ebclfsa_aarch64_prebuild(
-    base_image = "@os_images_release_test_archive//file",
+    base_image = "@os_images_release_archive//file",
 )
 
 py_test(
@@ -36,7 +36,7 @@ py_test(
         "$(location :kernel)",
         "$(location :ssh_target_key)",
         "$(location :qemu_config)",
-        "$(location @os_images_release_test_archive//file)",
+        "$(location @os_images_release_archive//file)",
     ],
     data = [
         ":image",
@@ -44,7 +44,7 @@ py_test(
         ":qemu_config",
         ":ssh_target_key",
         ":vanilla-image",
-        "@os_images_release_test_archive//file",
+        "@os_images_release_archive//file",
     ],
     main = "test_release_macro_empty.py",
     tags = ["qemu-integration"],

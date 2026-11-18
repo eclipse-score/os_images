@@ -37,7 +37,7 @@ pkg_deb(
 )
 
 ebclfsa_aarch64_prebuild(
-    base_image = "@os_images_release_test_archive//file",
+    base_image = "@os_images_release_archive//file",
     packages = [
         ":first_package",
         ":second_package",
@@ -52,7 +52,7 @@ genrule(
         ":ssh_target_key",
         ":qemu_config",
         ":vanilla-image",
-        "@os_images_release_test_archive//file",
+        "@os_images_release_archive//file",
     ],
     outs = ["macro_contract_check.txt"],
     cmd = """
@@ -60,7 +60,7 @@ genrule(
             echo 'Customization did not change the release image' >&2
             exit 1
         fi
-        tar -xOzf $(location @os_images_release_test_archive//file) score-image-trixie-ebclfsa-ebcl-qemuarm64.wic | cmp - $(location :vanilla-image)
+        tar -xOzf $(location @os_images_release_archive//file) score-image-trixie-ebclfsa-ebcl-qemuarm64.wic | cmp - $(location :vanilla-image)
         printf 'external consumer macro outputs verified\\n' > $@
     """,
     tags = ["qemu-integration"],
