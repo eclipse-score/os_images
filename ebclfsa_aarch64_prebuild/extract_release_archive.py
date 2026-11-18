@@ -76,9 +76,7 @@ def extract(archive_path: Path, output_dir: Path, without_key: bool) -> None:
         image_name = _unique_matching_file(members, ".wic", ".wic file")
         stem = image_name[:-4]
         kernel_name = stem + "-vmlinux"
-        kernel_candidates = [
-            name for name in members if name.endswith("-vmlinux")
-        ]
+        kernel_candidates = [name for name in members if name.endswith("-vmlinux")]
         if not kernel_candidates:
             raise ArchiveError(f"missing matching -vmlinux for {image_name}")
         if len(kernel_candidates) != 1:
@@ -92,14 +90,11 @@ def extract(archive_path: Path, output_dir: Path, without_key: bool) -> None:
             )
 
         key_name = stem + "-ssh-target-key"
-        key_candidates = [
-            name for name in members if name.endswith("-ssh-target-key")
-        ]
+        key_candidates = [name for name in members if name.endswith("-ssh-target-key")]
         if without_key:
             if len(key_candidates) > 1:
                 raise ArchiveError(
-                    "ambiguous -ssh-target-key: "
-                    + ", ".join(sorted(key_candidates))
+                    "ambiguous -ssh-target-key: " + ", ".join(sorted(key_candidates))
                 )
             if key_candidates and key_candidates[0] != key_name:
                 raise ArchiveError(

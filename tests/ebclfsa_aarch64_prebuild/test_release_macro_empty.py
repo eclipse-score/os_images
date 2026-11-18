@@ -32,9 +32,10 @@ class ReleaseMacroEmptyPackagesTest(unittest.TestCase):
                 (key, "score-image-trixie-ebclfsa-ebcl-qemuarm64-ssh-target-key"),
             ):
                 with self.subTest(member=member):
-                    with release.extractfile(member) as original, output.open(
-                        "rb"
-                    ) as extracted:
+                    with (
+                        release.extractfile(member) as original,
+                        output.open("rb") as extracted,
+                    ):
                         self.assertEqual(
                             hashlib.file_digest(extracted, "sha256").digest(),
                             hashlib.file_digest(original, "sha256").digest(),

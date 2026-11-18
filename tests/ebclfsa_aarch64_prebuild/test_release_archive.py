@@ -24,7 +24,9 @@ import unittest
 class ReleaseArchiveTest(unittest.TestCase):
     def setUp(self):
         test_tmpdir = os.environ.get("TEST_TMPDIR")
-        self.assertTrue(test_tmpdir, "run this test through Bazel (TEST_TMPDIR is required)")
+        self.assertTrue(
+            test_tmpdir, "run this test through Bazel (TEST_TMPDIR is required)"
+        )
         self.tempdir = tempfile.TemporaryDirectory(dir=test_tmpdir)
         self.addCleanup(self.tempdir.cleanup)
         self.root = Path(self.tempdir.name)
