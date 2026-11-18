@@ -10,8 +10,8 @@ can depend on them directly.
 | OS name | Base | Architecture |
 | --- | --- | --- |
 | `ubuntu_x86_64` | Ubuntu 24.04 minimal cloud image | x86_64 |
-| `ebclfsa_aarch64` | EB corbos Linux for Safety Applications fastdev image built from the toolkit's packages | aarch64 |
-| `ebclfsa_aarch64_prebuild` | EB corbos Linux for Safety Applications fastdev image customized with shared Debian packages | aarch64 |
+| `ebclfsa_aarch64` | EB corbos Linux for Safety Applications built from the toolkit's packages | aarch64 |
+| `ebclfsa_aarch64_prebuild` | EBcLfSA release archive, optionally customized with Debian packages | aarch64 |
 
 All images expose `:image`, `:ssh_target_key` and `:qemu_config`.
 The ebclfsa images additionally expose `:kernel` for the prebuilt image.
@@ -84,7 +84,20 @@ $ ssh -i  $(bazel cquery --output=files //<os_name>:ssh_target_key) \
   root@169.254.158.190
 ```
 
+## EBcLfSA release archive contract
+
+The archive must be a flat tar.gz release archive with exactly one `.wic` file,
+one matching `*-vmlinux` file, and one matching `*-ssh-target-key` file. For an
+image named `score-image.wic`, the other required names are
+`score-image-vmlinux` and `score-image-ssh-target-key`. Additional metadata
+files are allowed at the archive root; nested paths, unsafe paths, links, and
+ambiguous or mismatched image/kernel/key files are rejected.
+
 ## Usage from another Bazel module
+
+Pin the release archive independently in the consumer's `MODULE.bazel`. This
+keeps the large base image version choice independent of the `os_images`
+module version and makes the download reproducible:
 
 ```starlark
 # MODULE.bazel
