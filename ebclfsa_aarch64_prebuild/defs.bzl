@@ -24,7 +24,7 @@ def ebclfsa_aarch64_prebuild(base_image, packages = [], ssh_target_key = None, v
 
     Args:
         base_image: Label of the pinned release archive file.
-        packages: Optional labels of Debian packages to install into the image.
+        packages: Optional labels of Debian packages in dependency order (i.e. more independent packages first) to install into the image.
         ssh_target_key: Optional key label for archives without a bundled key.
         visibility: Visibility applied to the five public image targets.
     """

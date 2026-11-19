@@ -15,7 +15,7 @@
 set -euo pipefail
 
 if [[ $# -lt 5 ]]; then
-    echo "Error: Expected working directory, image source, image target, SSH target key, and one or more Debian packages" >&2
+    echo "Error: Expected working directory, image source, image target, SSH target key, and one or more Debian packages in dependency order (i.e. more independent packages first)" >&2
     exit 1
 fi
 
@@ -149,6 +149,7 @@ for src in "${DEPLOY_SRCS[@]}"; do
     ssh "${SSH_OPTIONS[@]}" -p "${SSH_PORT}" root@localhost "rm -f /$(basename "${src}")"
 done
 
+# Lock password-based logins - we rely exclusively on key-pairs.
 ssh "${SSH_OPTIONS[@]}" -p "${SSH_PORT}" root@localhost "passwd -l root"
 
 # Release images may already mount an attached ITF disk on /opt.

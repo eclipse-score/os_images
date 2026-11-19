@@ -14,7 +14,7 @@ can depend on them directly.
 | `ebclfsa_aarch64_prebuild` | Makro for downloading and customizing the prebuilt EBcLfSA image | aarch64 |
 
 All images expose `:image`, `:ssh_target_key` and `:qemu_config`.
-The ebclfsa images additionally expose `:kernel` for the prebuilt image.
+Both EBcLfSA variants additionally expose `:kernel`.
 
 | Target | Content |
 | --- | --- |
@@ -92,16 +92,122 @@ image named `score-image.wic`, the other required names are
 `score-image-vmlinux` and `score-image-ssh-target-key`. Additional metadata
 files are allowed at the archive root; nested paths, unsafe paths, links, and
 ambiguous or mismatched image/kernel/key files are rejected.
+The key may be omitted when the macro is given an explicit `ssh_target_key`.
 
 ## Usage from another Bazel module
 
-Pin the release archive independently in the consumer's `MODULE.bazel`. This
-keeps the large base image version choice independent of the `os_images`
-module version and makes the download reproducible:
+Add `os_images` to the consumer's `MODULE.bazel`, selecting a published version
+that contains the image targets and macro described below. The ITF test examples
+also require a direct dependency on `score_itf`:
 
 ```starlark
 # MODULE.bazel
-bazel_dep(name = "os_images", version = "1.0")
+bazel_dep(name = "os_images", version = "<os_images_version>")
+bazel_dep(name = "score_itf", version = "<score_itf_version>")
+```
+
+### EBcLfSA aarch64
+
+Pin the release archive independently in the consumer's `MODULE.bazel`. This
+keeps the large base image version choice independent of the `os_images`
+module version and makes the download reproducible. For example, using the
+QEMU release archive pinned by this repository:
+
+```starlark
+# MODULE.bazel
+http_file = use_repo_rule("@bazel_tools//tools/build_defs/repo:http.bzl", "http_file")
+
+http_file(
+    name = "ebclfsa_release_archive",
+    downloaded_file_path = "score-image-trixie-ebclfsa-ebcl-qemuarm64.tar.gz",
+    sha256 = "<hash>",
+    urls = ["https://github.com/eclipse-score/os_images/releases/download/<os_images_version>/score-image-trixie-ebclfsa-ebcl-qemuarm64.tar.gz"],
+)
+```
+
+Instantiate the macro in a consumer package, for example `qemu/BUILD.bazel`:
+
+```starlark
+load("@os_images//ebclfsa_aarch64_prebuild:defs.bzl", "ebclfsa_aarch64_prebuild")
+
+ebclfsa_aarch64_prebuild(
+    base_image = "@ebclfsa_release_archive//file",
+)
+```
+
+This defines `//qemu:image`, `//qemu:vanilla-image`, `//qemu:kernel`,
+`//qemu:qemu_config`, and `//qemu:ssh_target_key`. Without extra packages,
+`image` is the unmodified `vanilla-image`. To customize it, pass `packages` as
+a list of labels for compatible Debian packages, in dependency order (least
+dependent first). Customization boots the image with QEMU and installs the
+packages. If the archive has no bundled key, pass `ssh_target_key` as a label
+for the private key already authorized by the image.
+
+An ITF test in another package can use the generated targets as follows;
+`test_example.py` is the consumer's test:
+
+```starlark
+# tests/BUILD.bazel
+load("@score_itf//:defs.bzl", "py_itf_test")
+
+py_itf_test(
+    name = "ebclfsa_test",
+    srcs = ["test_example.py"],
+    args = [
+        "--qemu-config=$(location //qemu:qemu_config)",
+        "--qemu-kernel=$(location //qemu:kernel)",
+        "--qemu-rootfs=$(location //qemu:image)",
+    ],
+    data = [
+        "//qemu:image",
+        "//qemu:kernel",
+        "//qemu:qemu_config",
+        "//qemu:ssh_target_key",
+    ],
+    plugins = ["@score_itf//score/itf/plugins:qemu_plugin"],
+)
+```
+
+Alternatively, use `@os_images//ebclfsa_aarch64:image`,
+`@os_images//ebclfsa_aarch64:kernel`, `@os_images//ebclfsa_aarch64:qemu_config`,
+and `@os_images//ebclfsa_aarch64:ssh_target_key` to build the EBcLfSA image
+from scratch; see the [build requirements](./ebclfsa_aarch64/README.md#requirements).
+
+### Ubuntu x86_64
+
+The Ubuntu targets can be referenced directly; `os_images` pins the underlying
+cloud image in its own module. No archive declaration or image macro is needed
+in the consumer:
+
+```starlark
+# tests/BUILD.bazel
+load("@score_itf//:defs.bzl", "py_itf_test")
+
+py_itf_test(
+    name = "ubuntu_test",
+    srcs = ["test_example.py"],
+    args = [
+        "--qemu-config=$(location @os_images//ubuntu_x86_64:qemu_config)",
+        "--qemu-rootfs=$(location @os_images//ubuntu_x86_64:image)",
+    ],
+    data = [
+        "@os_images//ubuntu_x86_64:image",
+        "@os_images//ubuntu_x86_64:qemu_config",
+        "@os_images//ubuntu_x86_64:ssh_target_key",
+    ],
+    plugins = ["@score_itf//score/itf/plugins:qemu_plugin"],
+)
+```
+
+Unlike EBcLfSA, Ubuntu does not expose a separate kernel target. Both examples
+include the private key in `data` because the QEMU configuration references its
+runfiles path. Building or running the images requires the corresponding QEMU
+emulator and host tools; see [Building locally](#building-locally). Run either
+example with the ITF QEMU wrapper:
+
+```console
+$ bazel test --run_under=@score_itf//scripts:run_under_qemu //tests:ebclfsa_test
+$ bazel test --run_under=@score_itf//scripts:run_under_qemu //tests:ubuntu_test
 ```
 
 ## Building locally
