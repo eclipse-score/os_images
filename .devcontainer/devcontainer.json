@@ -7,13 +7,6 @@
         "--privileged",
         "--device=/dev/kvm"
     ],
-    "mounts": [
-        {
-            "source": "${localEnv:HOME}${localEnv:USERPROFILE}/.agents",
-            "target": "/home/vscode/.agents",
-            "type": "bind"
-        }
-    ],
     "features": {
         "ghcr.io/devcontainers/features/docker-in-docker": {}
     },
