@@ -10,7 +10,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
-name: PR
+name: Tests
 on:
   pull_request:
     types: [opened, reopened, synchronize]
