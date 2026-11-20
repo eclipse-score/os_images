@@ -11,9 +11,9 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
-load("@score_os_images//ebclfsa_aarch64_prebuild:defs.bzl", "ebclfsa_aarch64_prebuild")
 load("@rules_python//python:defs.bzl", "py_test")
 load("@score_itf//:defs.bzl", "py_itf_test")
+load("@score_os_images//ebclfsa_aarch64_prebuild:defs.bzl", "ebclfsa_aarch64_prebuild")
 
 py_test(
     name = "release_archive_test",
