@@ -11,7 +11,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
-load("@os_images//ebclfsa_aarch64_prebuild:defs.bzl", "ebclfsa_aarch64_prebuild")
+load("@score_os_images//ebclfsa_aarch64_prebuild:defs.bzl", "ebclfsa_aarch64_prebuild")
 load("@rules_pkg//pkg:deb.bzl", "pkg_deb")
 load("@rules_pkg//pkg:tar.bzl", "pkg_tar")
 
@@ -50,7 +50,7 @@ pkg_deb(
 )
 
 ebclfsa_aarch64_prebuild(
-    base_image = "@os_images_release_archive//file",
+    base_image = "@score_os_images_release_archive//file",
     packages = [
         ":first_package",
         ":second_package",
@@ -65,7 +65,7 @@ genrule(
         ":ssh_target_key",
         ":qemu_config",
         ":vanilla-image",
-        "@os_images_release_archive//file",
+        "@score_os_images_release_archive//file",
     ],
     outs = ["macro_contract_check.txt"],
     cmd = """
@@ -73,7 +73,7 @@ genrule(
             echo 'Customization did not change the release image' >&2
             exit 1
         fi
-        tar -xOzf $(location @os_images_release_archive//file) score-image-trixie-ebclfsa-ebcl-qemuarm64.wic | cmp - $(location :vanilla-image)
+        tar -xOzf $(location @score_os_images_release_archive//file) score-image-trixie-ebclfsa-ebcl-qemuarm64.wic | cmp - $(location :vanilla-image)
         printf 'external consumer macro outputs verified\\n' > $@
     """,
     tags = ["qemu-integration"],
