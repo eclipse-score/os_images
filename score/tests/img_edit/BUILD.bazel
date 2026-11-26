@@ -1,0 +1,76 @@
+# *******************************************************************************
+# Copyright (c) 2026 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+
+load("@rules_pkg//pkg:tar.bzl", "pkg_tar")
+load("@rules_python//python:defs.bzl", "py_binary", "py_test")
+load("//score/common/img_edit:defs.bzl", "img_edit")
+
+py_binary(
+    name = "make_image",
+    srcs = ["make_image.py"],
+    main = "make_image.py",
+)
+
+genrule(
+    name = "base_image",
+    outs = ["base.wic"],
+    cmd = "$(location :make_image) $@",
+    tools = [":make_image"],
+)
+
+pkg_tar(
+    name = "first_tar",
+    srcs = ["first/config"],
+    package_dir = "/opt/app",
+    strip_prefix = "first",
+)
+
+pkg_tar(
+    name = "second_tar",
+    srcs = ["second/config"],
+    package_dir = "/opt/app",
+    strip_prefix = "second",
+)
+
+img_edit(
+    name = "edited",
+    srcs = [
+        ":first_tar",
+        ":second_tar",
+    ],
+    image = ":base.wic",
+)
+
+img_edit(
+    name = "unchanged",
+    srcs = [],
+    image = ":base.wic",
+)
+
+py_test(
+    name = "img_edit_test",
+    srcs = ["test_img_edit.py"],
+    args = [
+        "$(location :base.wic)",
+        "$(location :edited)",
+        "$(location :unchanged)",
+        "$(location //score/common/img_edit:edit.py)",
+    ],
+    data = [
+        ":base.wic",
+        ":edited",
+        ":unchanged",
+        "//score/common/img_edit:edit.py",
+    ],
+    main = "test_img_edit.py",
+)
