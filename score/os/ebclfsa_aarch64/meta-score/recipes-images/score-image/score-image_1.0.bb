@@ -23,7 +23,7 @@
 # SOFTWARE.
 
 SUMMARY = "Eclipse S-CORE EBcLfSA image"
-LICENSE = "MIT"
+LICENSE = "Apache-2.0"
 
 inherit ebclfsa_image
 
