@@ -70,7 +70,8 @@ def ebclfsa_aarch64_prebuild(base_image, packages = [], ssh_target_key = None, v
         native.genrule(
             name = "build_custom_image",
             srcs = [
-                ":extract_base_image",
+                ":vanilla-image",
+                ":kernel",
                 ":ssh_target_key",
                 _BUILD_SCRIPT,
             ] + packages,
@@ -78,7 +79,7 @@ def ebclfsa_aarch64_prebuild(base_image, packages = [], ssh_target_key = None, v
                 "customized/image.wic",
                 "customized/kernel-vmlinux",
             ],
-            cmd = "bash $(location %s) $(RULEDIR) $(RULEDIR)/base $(RULEDIR)/customized $(location :ssh_target_key)%s" % (
+            cmd = "bash $(location %s) $(RULEDIR) $(location :vanilla-image) $(location :kernel) $(RULEDIR)/customized $(location :ssh_target_key)%s" % (
                 _BUILD_SCRIPT,
                 "".join(package_locations),
             ),
