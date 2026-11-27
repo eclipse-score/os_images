@@ -30,3 +30,24 @@ img_ebclfsa_extract(
 The macro creates `release.wic`, `release-vmlinux`, and `release-ssh-key`. With
 `without_key = True`, the SSH-key output is omitted. The `prefix` argument can be used
 to choose a different prefix for these output targets.
+
+## Prebuild image targets
+
+`ebclfsa_aarch64_prebuild()` defines the standard image targets for a release archive.
+Pass `base_image` as the archive label. Optionally pass `packages` as Debian package
+labels to install into the image, in dependency order, and `ssh_target_key` when the
+archive does not contain a key. `visibility` sets the visibility of the public image
+targets and defaults to public.
+
+```starlark
+load("@score_os_images//score/os/ebclfsa_aarch64_prebuild:defs.bzl", "ebclfsa_aarch64_prebuild")
+
+ebclfsa_aarch64_prebuild(
+    base_image = "@score_os_images_release_archive//file",
+    packages = ["//packages:example"],
+)
+```
+
+The macro defines `image`, `vanilla-image`, `kernel`, `ssh_target_key`, and
+`qemu_config`. Without `packages`, `image` aliases `vanilla-image`; with packages, it
+is the customized image produced by installing them.
