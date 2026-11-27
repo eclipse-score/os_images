@@ -13,9 +13,9 @@
 
 """Public macro for using EBcLfSA release archives as QEMU images."""
 
+load("//score/common/img_ebclfsa:defs.bzl", "img_ebclfsa_extract")
 load("//score/common/qemu:qemu_config.bzl", "qemu_config")
 
-_EXTRACTOR = Label("//score/os/ebclfsa_aarch64_prebuild:extract_release_archive.py")
 _BUILD_SCRIPT = Label("//score/os/ebclfsa_aarch64_prebuild:build_image.sh")
 _QEMU_TEMPLATE = Label("//score/os/ebclfsa_aarch64:qemu_config.template.json")
 
@@ -30,49 +30,31 @@ def ebclfsa_aarch64_prebuild(base_image, packages = [], ssh_target_key = None, v
     """
     public_visibility = visibility if visibility != None else ["//visibility:public"]
 
-    if ssh_target_key == None:
-        extraction_outs = [
-            "base/vanilla.wic",
-            "base/vanilla-vmlinux",
-            "base/ssh_target_key",
-        ]
-        key_source = "base/ssh_target_key"
-        extraction_option = ""
-    else:
-        extraction_outs = [
-            "base/vanilla.wic",
-            "base/vanilla-vmlinux",
-        ]
-        key_source = ssh_target_key
-        extraction_option = " --without-key"
-
-    native.genrule(
+    img_ebclfsa_extract(
         name = "extract_base_image",
-        srcs = [base_image],
-        outs = extraction_outs,
-        tools = [_EXTRACTOR],
-        cmd = "python3 $(location %s) $(location %s) $(RULEDIR)/base%s" % (
-            _EXTRACTOR,
-            base_image,
-            extraction_option,
-        ),
-        tags = ["manual"],
-        visibility = ["//visibility:private"],
+        archive = base_image,
+        without_key = ssh_target_key != None,
+        prefix = "base",
     )
 
     native.filegroup(
         name = "vanilla-image",
-        srcs = ["base/vanilla.wic"],
+        srcs = [":base.wic"],
         tags = ["manual"],
         visibility = public_visibility,
     )
 
     native.filegroup(
         name = "kernel",
-        srcs = ["base/vanilla-vmlinux"],
+        srcs = [":base-vmlinux"],
         tags = ["manual"],
         visibility = public_visibility,
     )
+
+    if ssh_target_key == None:
+        key_source = ":base-ssh-key"
+    else:
+        key_source = ssh_target_key
 
     native.filegroup(
         name = "ssh_target_key",

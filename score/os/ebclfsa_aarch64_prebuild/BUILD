@@ -15,7 +15,6 @@ exports_files(
     [
         "build_image.sh",
         "defs.bzl",
-        "extract_release_archive.py",
     ],
     visibility = ["//visibility:public"],
 )
