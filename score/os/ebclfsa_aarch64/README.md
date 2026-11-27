@@ -35,7 +35,7 @@ only built when selected explicitly.
 | --- | --- |
 | `:image` | The `.wic` disk image |
 | `:kernel` | The kernel required to boot the image |
-| `:qemu_config` | Generated QEMU configuration with the image's SSH key path |
+| `:qemu_config` | Generated QEMU configuration using passwordless root SSH |
 | `:ssh_target_key` | Development private key generated with the image |
 | `:network_config_deb` | The `score-network-config` Debian package |
 | `:ssh_host_keys_deb` | Generated SSH server host keys as a Debian package |
@@ -65,7 +65,7 @@ prefers a DHCP-provided default gateway when available. The file is packaged as
 `score-network-config`, which [kas.yml](kas.yml) selects through
 `EBCLFSA_FASTDEV_NETWORK_CONFIG` in place of the toolkit's
 `ebclfsa-fastdev-network` package. It therefore matches the addresses in
-[`qemu_config.template.json`](qemu_config.template.json).
+[`qemu_config.template`](qemu_config.template).
 
 ## Selecting packages
 
@@ -127,7 +127,8 @@ For each machine, the workflow attaches these assets to the existing release,
 following the upstream toolkit's archive layout:
 
 - `score-image-trixie-ebclfsa-<machine>.tar.gz`: disk image, kernel, image
-  SPDX metadata and the generated development SSH private key.
+  SPDX metadata and the generated development SSH private key. The QEMU archive
+  also includes `qemu_config.json.template`, the image's QEMU configuration template.
 - `score-image-sdk-trixie-ebclfsa-<machine>.tar.gz`: cross-compilation SDK sysroot.
 - `score-image-sdk-trixie-ebclfsa-<machine>.spdx.json`: SDK SPDX metadata.
 - `score-image-trixie-ebclfsa-<machine>.sha256`: checksums of the three assets.
@@ -149,7 +150,7 @@ $ ssh -o IdentitiesOnly=yes -i score-image-trixie-ebclfsa-ebcl-qemuarm64-ssh-tar
 ```
 
 For Raspberry Pi, use the `rpi4b` key instead and the device's reachable IP
-address. Key-based login is the only means to login via SSH.
+address. Root can also log in over SSH with an empty password.
 These keys are deliberately public development credentials: anyone downloading
 the release can log in as root on a reachable image. Use only on isolated test
 networks, never reuse the keys elsewhere, and replace the authorized key and

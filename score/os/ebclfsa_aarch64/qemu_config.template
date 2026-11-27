@@ -1,5 +1,4 @@
 {
-    "ssh_auth": {"pkey_path": "@SSH_KEY_PATH@"},
     "networks": [
         {
             "name": "tap0",

@@ -46,7 +46,7 @@ def _qemu_config_impl(ctx):
 qemu_config = rule(
     implementation = _qemu_config_impl,
     attrs = {
-        "template": attr.label(allow_single_file = [".json"], mandatory = True),
+        "template": attr.label(allow_single_file = [".json", ".template"], mandatory = True),
         "key": attr.label(allow_single_file = True),
         "out": attr.output(mandatory = True),
         "uefi_code": attr.label(mandatory = False),

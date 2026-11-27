@@ -149,9 +149,6 @@ for src in "${DEPLOY_SRCS[@]}"; do
     ssh "${SSH_OPTIONS[@]}" -p "${SSH_PORT}" root@localhost "rm -f /$(basename "${src}")"
 done
 
-# Lock password-based logins - we rely exclusively on key-pairs.
-ssh "${SSH_OPTIONS[@]}" -p "${SSH_PORT}" root@localhost "passwd -l root"
-
 # Release images may already mount an attached ITF disk on /opt.
 ssh "${SSH_OPTIONS[@]}" -p "${SSH_PORT}" root@localhost \
     'if ! awk '\''$2 == "/opt" && $1 !~ /^#/ { found=1 } END { exit !found }'\'' /etc/fstab; then printf "\n# Additional disk attached by the ITF QEMU plugin\n/dev/vdb\t/opt\tauto\tdefaults,nofail\t0\t0\n" >> /etc/fstab; fi'

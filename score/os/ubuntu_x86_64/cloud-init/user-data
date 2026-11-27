@@ -17,14 +17,14 @@
 # build_image.sh; afterwards cloud-init disables itself so that the resulting
 # image is self-contained and boots straight into the configured state.
 #
-# The resulting image uses a build-generated development SSH key. It is meant
-# for integration testing only and must never be used in production.
+# The resulting image allows passwordless root SSH login and uses a
+# build-generated development SSH key. It must never be used in production.
 
 disable_root: false
-ssh_pwauth: false
+ssh_pwauth: true
 users:
   - name: root
-    lock_passwd: true
+    lock_passwd: false
     ssh_authorized_keys:
       - "@SSH_AUTHORIZED_KEY@"
 
@@ -68,6 +68,16 @@ write_files:
     content: |
       network: {config: disabled}
 
+  - path: /etc/ssh/sshd_config.d/00-score-itf.conf
+    permissions: "0644"
+    owner: root:root
+    content: |
+      PermitRootLogin yes
+      PermitEmptyPasswords yes
+      PasswordAuthentication yes
+      PubkeyAuthentication yes
+      KbdInteractiveAuthentication no
+
 runcmd:
   # A single fail-fast script: build_image.sh treats the absence of the marker
   # printed at the very end as a build failure, so a partially customized image
@@ -76,6 +86,11 @@ runcmd:
     - -eux
     - -c
     - |
+      passwd -d root
+      # PAM must accept empty passwords as well as sshd.
+      grep -q 'pam_unix\.so.*nullok' /etc/pam.d/common-auth ||
+          sed -i 's/\(pam_unix\.so\)/\1 nullok/' /etc/pam.d/common-auth
+      grep -q 'pam_unix\.so.*nullok' /etc/pam.d/common-auth
       # Drop cloud-init's network configuration; the configuration above supplies
       # both the static address and DHCP.
       rm -f /etc/netplan/50-cloud-init.yaml

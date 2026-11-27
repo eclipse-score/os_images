@@ -21,6 +21,7 @@ export fixture
 mkdir -p "$fixture/toolkit"/{kas,layers,.devcontainer} \
     "$fixture/source/meta-score" "$fixture/deb/DEBIAN"
 printf 'header:\n  version: 18\n' > "$fixture/source/kas.yml"
+cp "$(dirname "$script")/qemu_config.template" "$fixture/source/qemu_config.template"
 cat > "$fixture/deb/DEBIAN/control" <<EOF
 Package: score-test
 Version: 1.0
@@ -97,7 +98,13 @@ for test_machine in ebcl-qemuarm64 rpi4b; do
         cd "$output"
         sha256sum --check "$image.sha256"
         tar -tzf "$image.tar.gz" > contents
-        [[ $(wc -l < contents) == 4 ]]
+        if [[ $test_machine == ebcl-qemuarm64 ]]; then
+            [[ $(wc -l < contents) == 5 ]]
+            grep -Fx 'qemu_config.json.template' contents
+            tar -xOzf "$image.tar.gz" qemu_config.json.template | cmp - "$fixture/source/qemu_config.template"
+        else
+            [[ $(wc -l < contents) == 4 ]]
+        fi
         grep -Fx "$image.wic" contents
         grep -Fx "$image-vmlinux" contents
         grep -Fx "$image.spdx.json" contents
@@ -141,4 +148,14 @@ if bash "$script" --release invalid "$fixture/toolkit" \
     exit 1
 fi
 grep -F 'unsupported release machine: invalid' "$fixture/invalid.log"
+
+rm "$fixture/source/qemu_config.template"
+if bash "$script" --release ebcl-qemuarm64 "$fixture/toolkit" \
+    "$fixture/source/kas.yml" "$fixture/missing" > "$fixture/missing-template.log" 2>&1; then
+    echo "Error: missing QEMU configuration template did not fail the build" >&2
+    exit 1
+fi
+grep -F "Error: QEMU configuration template is missing: $fixture/source/qemu_config.template" \
+    "$fixture/missing-template.log"
+[[ -z $(find "$fixture/missing" -mindepth 1 -print -quit) ]]
 echo "Image build script tests passed"
