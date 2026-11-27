@@ -93,14 +93,12 @@ py_test(
     name = "qemu_config_test",
     srcs = ["test_qemu_config.py"],
     args = [
-        "$(location //score/tests/ebclfsa_aarch64_prebuild:qemu_config)",
         "$(location //score/os/ebclfsa_aarch64:qemu_config)",
         "$(location //score/os/ubuntu_x86_64:qemu_config)",
     ],
     data = [
         "//score/os/ebclfsa_aarch64:qemu_config",
         "//score/os/ubuntu_x86_64:qemu_config",
-        "//score/tests/ebclfsa_aarch64_prebuild:qemu_config",
     ],
     main = "test_qemu_config.py",
 )

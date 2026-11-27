@@ -18,7 +18,7 @@ load("//score/common/qemu:qemu_config.bzl", "qemu_config")
 _EXTRACTOR = Label("//score/os/ebclfsa_aarch64_prebuild:extract_release_archive.py")
 _BUILD_SCRIPT = Label("//score/os/ebclfsa_aarch64_prebuild:build_image.sh")
 
-def ebclfsa_aarch64_prebuild(base_image, packages = [], ssh_target_key = None, visibility = None):
+def ebclfsa_aarch64_prebuild(base_image, packages = [], ssh_target_key = None, visibility = None, tags = []):
     """Defines the standard QEMU image targets for an EBcLfSA release archive.
 
     Args:
@@ -26,6 +26,7 @@ def ebclfsa_aarch64_prebuild(base_image, packages = [], ssh_target_key = None, v
         packages: Optional labels of Debian packages in dependency order (i.e. more independent packages first) to install into the image.
         ssh_target_key: Optional key label for archives without a bundled key.
         visibility: Visibility applied to the five public image targets.
+        tags: Additional tags applied to the generated targets.
     """
     public_visibility = visibility if visibility != None else ["//visibility:public"]
 
@@ -55,27 +56,28 @@ def ebclfsa_aarch64_prebuild(base_image, packages = [], ssh_target_key = None, v
             base_image,
             extraction_option,
         ),
-        tags = ["manual"],
+        tags = ["manual"] + tags,
         visibility = ["//visibility:private"],
     )
 
     native.filegroup(
         name = "vanilla-image",
         srcs = ["base/vanilla.wic"],
-        tags = ["manual"],
+        tags = ["manual"] + tags,
         visibility = public_visibility,
     )
 
     native.filegroup(
         name = "kernel",
         srcs = ["base/vanilla-vmlinux"],
-        tags = ["manual"],
+        tags = ["manual"] + tags,
         visibility = public_visibility,
     )
 
     native.filegroup(
         name = "ssh_target_key",
         srcs = [key_source],
+        tags = tags,
         visibility = public_visibility,
     )
 
@@ -84,7 +86,7 @@ def ebclfsa_aarch64_prebuild(base_image, packages = [], ssh_target_key = None, v
         srcs = [base_image],
         outs = ["qemu_config.template.json"],
         cmd = "tar -xOzf $(location %s) qemu_config.json.template > $@" % base_image,
-        tags = ["manual"],
+        tags = ["manual"] + tags,
         visibility = ["//visibility:private"],
     )
 
@@ -108,7 +110,7 @@ def ebclfsa_aarch64_prebuild(base_image, packages = [], ssh_target_key = None, v
                 _BUILD_SCRIPT,
                 "".join(package_locations),
             ),
-            tags = ["manual"],
+            tags = ["manual"] + tags,
             visibility = ["//visibility:private"],
         )
         image_source = [
@@ -118,7 +120,7 @@ def ebclfsa_aarch64_prebuild(base_image, packages = [], ssh_target_key = None, v
         native.alias(
             name = "image",
             actual = ":vanilla-image",
-            tags = ["manual"],
+            tags = ["manual"] + tags,
             visibility = public_visibility,
         )
 
@@ -126,7 +128,7 @@ def ebclfsa_aarch64_prebuild(base_image, packages = [], ssh_target_key = None, v
         native.filegroup(
             name = "image",
             srcs = image_source,
-            tags = ["manual"],
+            tags = ["manual"] + tags,
             visibility = public_visibility,
         )
 
@@ -134,6 +136,7 @@ def ebclfsa_aarch64_prebuild(base_image, packages = [], ssh_target_key = None, v
         name = "qemu_config",
         out = "qemu_config.json",
         key = ":ssh_target_key",
+        tags = tags,
         template = ":extract_qemu_config_template",
         visibility = public_visibility,
     )

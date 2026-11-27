@@ -55,6 +55,7 @@ ebclfsa_aarch64_prebuild(
         ":first_package",
         ":second_package",
     ],
+    tags = ["manual"],
 )
 
 genrule(

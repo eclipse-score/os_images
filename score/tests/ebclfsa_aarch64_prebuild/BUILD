@@ -25,6 +25,7 @@ py_test(
 
 ebclfsa_aarch64_prebuild(
     base_image = "//score/os/ebclfsa_aarch64:test_archive",
+    tags = ["manual"],
 )
 
 py_test(
