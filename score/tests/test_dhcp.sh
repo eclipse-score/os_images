@@ -43,12 +43,12 @@ case "$architecture" in
         ;;
 esac
 
-ssh_options=(-p 2222 -o BatchMode=yes -o ConnectTimeout=2
-    -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null
-    -o LogLevel=ERROR)
 cp "$key" "$TEST_TMPDIR/ssh-key"
 chmod 600 "$TEST_TMPDIR/ssh-key"
-ssh_options+=(-i "$TEST_TMPDIR/ssh-key" -o IdentitiesOnly=yes)
+ssh_options=(-i "$TEST_TMPDIR/ssh-key" -p 2222
+    -o IdentitiesOnly=yes -o BatchMode=yes -o ConnectTimeout=2
+    -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null
+    -o LogLevel=ERROR)
 
 "${qemu[@]}" -m 2048 -smp 2 -snapshot \
     -drive "if=none,format=$format,file=$image,id=vd0" \

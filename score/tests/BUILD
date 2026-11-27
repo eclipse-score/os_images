@@ -127,7 +127,7 @@ py_itf_test(
         "test_multicast.py",
         "test_no_disk.py",
         "test_ping.py",
-        "test_ssh_passwordless.py",
+        "test_ssh_auth.py",
     ],
     args = [
         "--qemu-config=$(location //score/os/ubuntu_x86_64:qemu_config)",
@@ -149,7 +149,7 @@ py_itf_test(
         "test_multicast.py",
         "test_no_disk.py",
         "test_ping.py",
-        "test_ssh_passwordless.py",
+        "test_ssh_auth.py",
     ],
     args = [
         "--qemu-config=$(location //score/os/ebclfsa_aarch64:qemu_config)",
@@ -178,7 +178,7 @@ py_itf_test(
         "test_multicast.py",
         "test_no_disk.py",
         "test_ping.py",
-        "test_ssh_passwordless.py",
+        "test_ssh_auth.py",
     ],
     args = [
         "--qemu-config=$(location //score/tests/ebclfsa_aarch64_prebuild:qemu_config)",

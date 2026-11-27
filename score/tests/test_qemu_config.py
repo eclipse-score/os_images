@@ -17,17 +17,6 @@ import unittest
 
 
 class QemuConfigTest(unittest.TestCase):
-    def test_authentication_matches_image(self):
-        prebuild_path, ebclfsa_path, ubuntu_path = sys.argv[1:]
-        with open(prebuild_path, encoding="utf-8") as config_file:
-            prebuild = json.load(config_file)
-
-        for config_path in (ebclfsa_path, ubuntu_path):
-            with self.subTest(config_path=config_path):
-                with open(config_path, encoding="utf-8") as config_file:
-                    config = json.load(config_file)
-                self.assertNotIn("ssh_auth", config)
-
     def test_configs_have_required_fields(self):
         config_paths = sys.argv[1:]
         self.assertEqual(len(config_paths), 3)
