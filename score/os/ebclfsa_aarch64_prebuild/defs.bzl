@@ -17,7 +17,7 @@ load("//score/common/qemu:qemu_config.bzl", "qemu_config")
 
 _EXTRACTOR = Label("//score/os/ebclfsa_aarch64_prebuild:extract_release_archive.py")
 _BUILD_SCRIPT = Label("//score/os/ebclfsa_aarch64_prebuild:build_image.sh")
-_QEMU_TEMPLATE = Label("//score/os/ebclfsa_aarch64:qemu_config.template.json")
+_QEMU_TEMPLATE = Label("//score/os/ebclfsa_aarch64_prebuild:qemu_config.template.json")
 
 def ebclfsa_aarch64_prebuild(base_image, packages = [], ssh_target_key = None, visibility = None):
     """Defines the standard QEMU image targets for an EBcLfSA release archive.

@@ -93,7 +93,6 @@ filegroup(
 qemu_config(
     name = "qemu_config",
     out = "qemu_config.json",
-    key = ":ssh_target_key",
     template = "qemu_config.template.json",
     visibility = ["//visibility:public"],
 )

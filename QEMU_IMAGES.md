@@ -24,12 +24,11 @@ Both EBcLfSA variants additionally expose `:kernel`.
 | `:image` | The customized disk image |
 | `:ssh_target_key` | The development SSH private key for the image |
 | `:kernel` | The kernel for the EBcLfSA images |
-| `:qemu_config` | `qemu_config.json` describing how to run the image, preconfigured with the SSH key path |
+| `:qemu_config` | `qemu_config.json` describing how to run the image |
 
 
-The generated `:qemu_config` sets
-ITF's native `ssh_auth.pkey_path` to the key's runfiles path. Include the key
-in the test's `data` alongside the image and configuration:
+The EBcLfSA scratch-built and Ubuntu QEMU configurations use ITF's default
+passwordless root login:
 
 ```starlark
 args = [
@@ -41,7 +40,6 @@ data = [
     "//score/os/<os_name>:image",
     "//score/os/<os_name>:kernel",
     "//score/os/<os_name>:qemu_config",
-    "//score/os/<os_name>:ssh_target_key",
 ]
 ```
 
@@ -86,8 +84,16 @@ py_itf_test(
 
 ## Root SSH login
 
-The images permit root SSH login only with a development key.
-It must never be used in production.
+The `ebclfsa_aarch64` and `ubuntu_x86_64` images permit root SSH login
+with an empty password or a development key. Prebuilt EBcLfSA images retain
+the authentication configuration of their release archive. These images are
+for isolated testing only and must never be used in production.
+
+To log in without a password:
+
+```console
+$ ssh root@169.254.158.190
+```
 
 Login into a running image using the development SSH key:
 
@@ -181,8 +187,8 @@ py_itf_test(
 ```
 
 Alternatively, use `@score_os_images//score/os/ebclfsa_aarch64:image`,
-`@score_os_images//score/os/ebclfsa_aarch64:kernel`, `@score_os_images//score/os/ebclfsa_aarch64:qemu_config`,
-and `@score_os_images//score/os/ebclfsa_aarch64:ssh_target_key` to build the EBcLfSA image
+`@score_os_images//score/os/ebclfsa_aarch64:kernel` and
+`@score_os_images//score/os/ebclfsa_aarch64:qemu_config` to build the EBcLfSA image
 from scratch; see the [build requirements](./score/os/ebclfsa_aarch64/README.md#requirements).
 
 ### Ubuntu x86_64
@@ -205,7 +211,6 @@ py_itf_test(
     data = [
         "@score_os_images//score/os/ubuntu_x86_64:image",
         "@score_os_images//score/os/ubuntu_x86_64:qemu_config",
-        "@score_os_images//score/os/ubuntu_x86_64:ssh_target_key",
     ],
     plugins = ["@score_itf//score/itf/plugins:qemu_plugin"],
 )
@@ -242,7 +247,6 @@ $ bazel test --config=qemu-integration //score/tests/...
 
 ## Security note
 
-The EBcLfSA and Ubuntu images use build-generated development SSH
-keys for root login with password authentication disabled.
-All these images
-are meant for integration testing only and must never be used in production.
+The EBcLfSA and Ubuntu images allow passwordless root login and use
+build-generated development SSH keys. They are meant for integration testing
+only and must never be used in production.

@@ -57,11 +57,10 @@ sh_test(
     args = [
         "x86_64",
         "$(location //score/os/ubuntu_x86_64:image)",
-        "$(location //score/os/ubuntu_x86_64:ssh_target_key)",
+        "--passwordless",
     ],
     data = [
         "//score/os/ubuntu_x86_64:image",
-        "//score/os/ubuntu_x86_64:ssh_target_key",
     ],
     tags = ["qemu-integration"],
     target_compatible_with = ["@platforms//os:linux"],
@@ -74,13 +73,12 @@ sh_test(
     args = [
         "aarch64",
         "$(location //score/os/ebclfsa_aarch64:image)",
-        "$(location //score/os/ebclfsa_aarch64:ssh_target_key)",
+        "--passwordless",
         "$(location //score/os/ebclfsa_aarch64:kernel)",
     ],
     data = [
         "//score/os/ebclfsa_aarch64:image",
         "//score/os/ebclfsa_aarch64:kernel",
-        "//score/os/ebclfsa_aarch64:ssh_target_key",
     ],
     tags = [
         "manual",
@@ -127,7 +125,7 @@ py_itf_test(
         "test_multicast.py",
         "test_no_disk.py",
         "test_ping.py",
-        "test_ssh_auth.py",
+        "test_ssh_passwordless.py",
     ],
     args = [
         "--qemu-config=$(location //score/os/ubuntu_x86_64:qemu_config)",
@@ -136,7 +134,6 @@ py_itf_test(
     data = [
         "//score/os/ubuntu_x86_64:image",
         "//score/os/ubuntu_x86_64:qemu_config",
-        "//score/os/ubuntu_x86_64:ssh_target_key",
     ],
     plugins = ["@score_itf//score/itf/plugins:qemu_plugin"],
     tags = ["qemu-integration"],
@@ -150,7 +147,7 @@ py_itf_test(
         "test_multicast.py",
         "test_no_disk.py",
         "test_ping.py",
-        "test_ssh_auth.py",
+        "test_ssh_passwordless.py",
     ],
     args = [
         "--qemu-config=$(location //score/os/ebclfsa_aarch64:qemu_config)",
@@ -162,7 +159,6 @@ py_itf_test(
         "//score/os/ebclfsa_aarch64:kernel",
         "//score/os/ebclfsa_aarch64:qemu_config",
         "//score/os/ebclfsa_aarch64:ssh_host_public_keys",
-        "//score/os/ebclfsa_aarch64:ssh_target_key",
     ],
     plugins = ["@score_itf//score/itf/plugins:qemu_plugin"],
     # Building the image takes long, so the test only runs when selected
@@ -212,7 +208,6 @@ py_itf_test(
         ":qemu_disk_image",
         "//score/os/ubuntu_x86_64:image",
         "//score/os/ubuntu_x86_64:qemu_config",
-        "//score/os/ubuntu_x86_64:ssh_target_key",
     ],
     plugins = ["@score_itf//score/itf/plugins:qemu_plugin"],
     tags = ["qemu-integration"],
@@ -233,7 +228,6 @@ py_itf_test(
         "//score/os/ebclfsa_aarch64:image",
         "//score/os/ebclfsa_aarch64:kernel",
         "//score/os/ebclfsa_aarch64:qemu_config",
-        "//score/os/ebclfsa_aarch64:ssh_target_key",
     ],
     plugins = ["@score_itf//score/itf/plugins:qemu_plugin"],
     # Building the image takes long, so the test only runs when selected

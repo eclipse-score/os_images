@@ -65,6 +65,7 @@ class ReleaseArchiveTest(unittest.TestCase):
                 ("score-release-vmlinux", "kernel bytes"),
                 ("score-release-ssh-target-key", "key bytes"),
                 ("score-release.spdx.json", "{}"),
+                ("qemu_config.json.template", '{"networks": []}'),
                 ("README.txt", "release metadata"),
             ]
         )

@@ -51,6 +51,10 @@ config=$(realpath "$2")
 output=$(realpath "$3")
 shift 3
 sources=$(dirname "$config")
+if [[ "$release" == true && "$machine" == ebcl-qemuarm64 && ! -f "$sources/qemu_config.template" ]]; then
+    echo "Error: QEMU configuration template is missing: $sources/qemu_config.template" >&2
+    exit 1
+fi
 # Keep the workspace on the same filesystem visible to the Docker daemon.
 work=$(mktemp -d "$output/kas-work.XXXXXXXX")
 trap 'rm -rf -- "$work"' EXIT
@@ -171,8 +175,13 @@ done
 
 if [[ "$release" == true ]]; then
     # The disk image contains development SSH server host keys.
+    archive_members=("$image.wic" "$image-vmlinux" "$image.spdx.json" "$image-ssh-target-key")
+    if [[ "$machine" == ebcl-qemuarm64 ]]; then
+        cp "$sources/qemu_config.template" "$work/qemu_config.json.template"
+        archive_members+=(-C "$work" qemu_config.json.template)
+    fi
     tar --sparse -czf "$output/$image.tar.gz" -C "$deploy" \
-        "$image.wic" "$image-vmlinux" "$image.spdx.json" "$image-ssh-target-key"
+        "${archive_members[@]}"
     cp -L "$deploy/$sdk.tar.gz" "$deploy/$sdk.spdx.json" "$output/"
     (
         cd "$output"
