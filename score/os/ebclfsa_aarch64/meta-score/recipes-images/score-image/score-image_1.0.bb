@@ -33,6 +33,7 @@ inherit ebclfsa_image
 # nooelint: oelint.file.requireinclude oelint.file.includenotfound
 include recipes-images/fastdev/fastdev-bsp.inc
 
+# Default values for qemu environment
 EBCLFSA_FASTDEV_COMPATIBLE_MACHINE ?= "ebcl-qemuarm64"
 EBCLFSA_FASTDEV_FSTAB_CONFIG ?= "ebclfsa-fastdev-fstab"
 EBCLFSA_FASTDEV_NETWORK_CONFIG ?= "ebclfsa-fastdev-network"
@@ -57,14 +58,9 @@ require recipes-images/common/ebclfsa-common.inc
 
 require recipes-images/common/ebclfsa-dev.inc
 
+# Additional fastdev-specific config packages
 IMAGE_INSTALL:append = " \
-    ebclfsa-fastdev-crinit-earlysetup \
-"
-
-IMAGE_INSTALL:append = " \
-    ${EBCLFSA_FASTDEV_FSTAB_CONFIG} \
-    ${EBCLFSA_FASTDEV_NETWORK_CONFIG} \
-    ${EBCLFSA_FASTDEV_SERIAL_CONFIG} \
+    ebclfsa-fastdev-crinit-earlysetup\
 "
 
 IMAGE_INSTALL:append = " \
@@ -72,6 +68,14 @@ IMAGE_INSTALL:append = " \
     ebclfsa-hi-demo \
 "
 
+# BSP-specific packages
+IMAGE_INSTALL:append = " \
+    ${EBCLFSA_FASTDEV_FSTAB_CONFIG} \
+    ${EBCLFSA_FASTDEV_NETWORK_CONFIG} \
+    ${EBCLFSA_FASTDEV_SERIAL_CONFIG} \
+"
+
+# Add included features to rootfs
 IMAGE_INSTALL:append = " \
     ${EBCLFSA_FASTDEV_FEATURES_CONTENT} \
 "
