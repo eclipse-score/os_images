@@ -77,7 +77,7 @@ def ebclfsa_aarch64_prebuild(base_image, packages = [], ssh_target_key = None, v
     native.filegroup(
         name = "ssh_target_key",
         srcs = [key_source],
-        tags = tags,
+        tags = ["manual"] + tags,
         visibility = public_visibility,
     )
 
@@ -136,7 +136,7 @@ def ebclfsa_aarch64_prebuild(base_image, packages = [], ssh_target_key = None, v
         name = "qemu_config",
         out = "qemu_config.json",
         key = ":ssh_target_key",
-        tags = tags,
+        tags = ["manual"] + tags,
         template = ":extract_qemu_config_template",
         visibility = public_visibility,
     )
