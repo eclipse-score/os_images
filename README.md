@@ -14,6 +14,8 @@ OS Images for testing and deliveries
 
 See the [examples folder](./examples) for practical examples about how use this repository with a Bazel module.
 
+For adding tar archives to WIC images, see [WIC image editing](./score/common/img_edit/README.md).
+
 ## License
 
 [Apache-2](./LICENSE)

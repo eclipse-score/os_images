@@ -12,7 +12,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
-"""Validates and normalizes an EBcLfSA release archive for QEMU builds."""
+"""Validates and normalizes an EBcLfSA release archive for prebuilds."""
 
 import argparse
 import shutil

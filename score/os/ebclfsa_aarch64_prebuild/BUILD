@@ -11,11 +11,19 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
+load("@rules_python//python:py_binary.bzl", "py_binary")
+
 exports_files(
     [
         "build_image.sh",
         "defs.bzl",
-        "extract_release_archive.py",
+        "extract.py",
     ],
     visibility = ["//visibility:public"],
+)
+
+py_binary(
+    name = "extract",
+    srcs = ["extract.py"],
+    main = "extract.py",
 )

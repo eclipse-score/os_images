@@ -14,24 +14,33 @@
 
 set -euo pipefail
 
-if [[ $# -lt 5 ]]; then
-    echo "Error: Expected working directory, image source, image target, SSH target key, and one or more Debian packages in dependency order (i.e. more independent packages first)" >&2
+if [[ $# -lt 6 ]]; then
+    echo "Error: Expected working directory, image source, kernel source, image target, SSH target key, and one or more Debian packages in dependency order (i.e. more independent packages first)" >&2
     exit 1
 fi
 
 WORKING_DIR="$1"
 IMAGE_SOURCE="$2"
-IMAGE_TARGET="$3"
-SSH_TARGET_KEY="$4"
-shift 4
+KERNEL_SOURCE="$3"
+IMAGE_TARGET="$4"
+SSH_TARGET_KEY="$5"
+shift 5
 DEPLOY_SRCS=("$@")
 
 if [[ ! -d "${WORKING_DIR}" ]]; then
     echo "Error: Working directory does not exist: ${WORKING_DIR}" >&2
     exit 1
 fi
-if [[ ! -d "${IMAGE_SOURCE}" ]]; then
-    echo "Error: Image source location is not a directory: ${IMAGE_SOURCE}" >&2
+if [[ ! -f "${IMAGE_SOURCE}" ]]; then
+    echo "Error: Image source file does not exist: ${IMAGE_SOURCE}" >&2
+    exit 1
+fi
+if [[ ! -f "${KERNEL_SOURCE}" ]]; then
+    echo "Error: Kernel source file does not exist: ${KERNEL_SOURCE}" >&2
+    exit 1
+fi
+if [[ "${IMAGE_SOURCE}" != *.wic || "${KERNEL_SOURCE}" != "${IMAGE_SOURCE%.wic}-vmlinux" ]]; then
+    echo "Error: Kernel does not match image: ${KERNEL_SOURCE} and ${IMAGE_SOURCE}" >&2
     exit 1
 fi
 if [[ -e "${IMAGE_TARGET}" && ! -d "${IMAGE_TARGET}" ]]; then
@@ -58,26 +67,9 @@ for src in "${DEPLOY_SRCS[@]}"; do
     fi
 done
 
-mapfile -t image_files < <(find -L "${IMAGE_SOURCE}" -maxdepth 1 -type f -name "*.wic" -print)
-mapfile -t kernel_files < <(find -L "${IMAGE_SOURCE}" -maxdepth 1 -type f -name "*-vmlinux" -print)
-if [[ ${#image_files[@]} -ne 1 ]]; then
-    echo "Error: Expected exactly one .wic file in ${IMAGE_SOURCE}, found ${#image_files[@]}" >&2
-    exit 1
-fi
-if [[ ${#kernel_files[@]} -ne 1 ]]; then
-    echo "Error: Expected exactly one *-vmlinux file in ${IMAGE_SOURCE}, found ${#kernel_files[@]}" >&2
-    exit 1
-fi
-IMAGE="${image_files[0]}"
-KERNEL="${kernel_files[0]}"
-if [[ "${KERNEL}" != "${IMAGE%.wic}-vmlinux" ]]; then
-    echo "Error: Kernel does not match image: ${KERNEL} and ${IMAGE}" >&2
-    exit 1
-fi
-
 mkdir -p "${IMAGE_TARGET}"
-cp -L --remove-destination -- "${IMAGE}" "${IMAGE_TARGET}/image.wic"
-cp -L --remove-destination -- "${KERNEL}" "${IMAGE_TARGET}/kernel-vmlinux"
+cp -L --remove-destination -- "${IMAGE_SOURCE}" "${IMAGE_TARGET}/image.wic"
+cp -L --remove-destination -- "${KERNEL_SOURCE}" "${IMAGE_TARGET}/kernel-vmlinux"
 IMAGE="${IMAGE_TARGET}/image.wic"
 KERNEL="${IMAGE_TARGET}/kernel-vmlinux"
 

@@ -11,15 +11,17 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
+load("@rules_pkg//pkg:tar.bzl", "pkg_tar")
 load("@rules_python//python:defs.bzl", "py_test")
 load("@score_itf//:defs.bzl", "py_itf_test")
+load("@score_os_images//score/common/img_edit:defs.bzl", "img_edit")
 load("@score_os_images//score/os/ebclfsa_aarch64_prebuild:defs.bzl", "ebclfsa_aarch64_prebuild")
 
 py_test(
     name = "release_archive_test",
     srcs = ["test_release_archive.py"],
-    args = ["$(location //score/os/ebclfsa_aarch64_prebuild:extract_release_archive.py)"],
-    data = ["//score/os/ebclfsa_aarch64_prebuild:extract_release_archive.py"],
+    args = ["$(location //score/os/ebclfsa_aarch64_prebuild:extract.py)"],
+    data = ["//score/os/ebclfsa_aarch64_prebuild:extract.py"],
     main = "test_release_archive.py",
 )
 
@@ -83,6 +85,38 @@ py_itf_test(
         "//score/tests/ebclfsa_aarch64_prebuild/with_packages:macro_contract_check",
         "//score/tests/ebclfsa_aarch64_prebuild/with_packages:qemu_config",
         "//score/tests/ebclfsa_aarch64_prebuild/with_packages:ssh_target_key",
+    ],
+    plugins = ["@score_itf//score/itf/plugins:qemu_plugin"],
+    tags = ["qemu-integration"],
+    target_compatible_with = ["@platforms//os:linux"],
+)
+
+pkg_tar(
+    name = "edit_payload",
+    srcs = ["edit_payload.txt"],
+    mode = "0644",
+    package_dir = "/usr/share/os-images-img-edit-test",
+)
+
+img_edit(
+    name = "edited_image",
+    srcs = [":edit_payload"],
+    image = ":image",
+)
+
+py_itf_test(
+    name = "edited_image_qemu_test",
+    srcs = ["test_edited_image.py"],
+    args = [
+        "--qemu-config=$(location :qemu_config)",
+        "--qemu-kernel=$(location :kernel)",
+        "--qemu-rootfs=$(location :edited_image)",
+    ],
+    data = [
+        ":edited_image",
+        ":kernel",
+        ":qemu_config",
+        ":ssh_target_key",
     ],
     plugins = ["@score_itf//score/itf/plugins:qemu_plugin"],
     tags = ["qemu-integration"],
