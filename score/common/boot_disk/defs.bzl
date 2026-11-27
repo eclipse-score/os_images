@@ -46,6 +46,20 @@ def _boot_disk_impl(ctx):
             seen[key] = src
             files[dest] = src
 
+    # A file can't also be the parent directory of another file (foo + foo/bar).
+    # Directory sources are fine as parents, their contents land below them.
+    for key in seen:
+        parts = key.split("/")
+        for i in range(1, len(parts)):
+            parent = "/".join(parts[:i])
+            if parent in seen and not seen[parent].is_directory:
+                fail("boot file %s maps to '%s', which is also the parent directory of %s ('%s')" % (
+                    seen[parent].path,
+                    parent,
+                    seen[key].path,
+                    key,
+                ))
+
     out = ctx.actions.declare_file(ctx.attr.out or ctx.label.name + ".img")
 
     args = ctx.actions.args()
