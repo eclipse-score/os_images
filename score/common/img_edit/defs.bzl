@@ -16,13 +16,19 @@
 def _img_edit_impl(ctx):
     out = ctx.actions.declare_file(ctx.label.name + ".wic")
     args = ctx.actions.args()
-    args.add(ctx.file.image)
+
+    image_files = [f for f in ctx.files.image if f.path.endswith(".wic")]
+    if len(image_files) != 1:
+        fail("Expected exactly one .wic file, got %d" % len(image_files))
+    image_file = image_files[0]
+
+    args.add(image_file)
     args.add(out)
     args.add_all(ctx.files.srcs)
     ctx.actions.run(
         executable = ctx.executable._tool,
         arguments = [args],
-        inputs = [ctx.file.image] + ctx.files.srcs,
+        inputs = [image_file] + ctx.files.srcs,
         outputs = [out],
         mnemonic = "ImageEdit",
         progress_message = "Editing WIC image %{output}",
@@ -34,7 +40,7 @@ img_edit = rule(
     attrs = {
         "image": attr.label(
             mandatory = True,
-            allow_single_file = [".wic"],
+            allow_files = [".wic"],
             doc = "Base WIC image, which is not modified.",
         ),
         "srcs": attr.label_list(
