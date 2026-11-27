@@ -20,8 +20,8 @@ load("@score_os_images//score/os/ebclfsa_aarch64_prebuild:defs.bzl", "ebclfsa_aa
 py_test(
     name = "release_archive_test",
     srcs = ["test_release_archive.py"],
-    args = ["$(location //score/common/img_ebclfsa:extract.py)"],
-    data = ["//score/common/img_ebclfsa:extract.py"],
+    args = ["$(location //score/os/ebclfsa_aarch64_prebuild:extract.py)"],
+    data = ["//score/os/ebclfsa_aarch64_prebuild:extract.py"],
     main = "test_release_archive.py",
 )
 

@@ -13,8 +13,8 @@
 
 load("@rules_pkg//pkg:tar.bzl", "pkg_tar")
 load("@rules_python//python:defs.bzl", "py_binary", "py_test")
-load("//score/common/img_ebclfsa:defs.bzl", "img_ebclfsa_extract")
 load("//score/common/img_edit:defs.bzl", "img_edit")
+load("//score/os/ebclfsa_aarch64_prebuild:defs.bzl", "img_ebclfsa_extract")
 
 py_binary(
     name = "make_release",

@@ -11,14 +11,15 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
-# EBcLfSA release archive extraction
+# EBcLfSA aarch64 prebuild
 
 `img_ebclfsa_extract()` extracts a WIC image, kernel, and optional SSH key from an
-EBcLfSA release archive (`.tar.gz`). The archive must contain exactly one `.wic` file,
-a matching `-vmlinux` kernel, and optionally a matching `-ssh-target-key`.
+EBcLfSA release archive (`.tar.gz`). The archive must contain exactly one `.wic` file
+and its matching `-vmlinux` kernel. A matching `-ssh-target-key` is required unless
+`without_key = True`.
 
 ```starlark
-load("@score_os_images//score/common/img_ebclfsa:defs.bzl", "img_ebclfsa_extract")
+load("@score_os_images//score/os/ebclfsa_aarch64_prebuild:defs.bzl", "img_ebclfsa_extract")
 
 img_ebclfsa_extract(
     name = "release",
@@ -26,9 +27,6 @@ img_ebclfsa_extract(
 )
 ```
 
-Outputs:
-- `release.wic`: the WIC image (if `include_wic=True`, default)
-- `release-vmlinux`: the kernel (if `include_kernel=True`, default)
-- `release-ssh-key`: the SSH key (if `include_key=True` and `without_key=False`, default)
-
-Use `include_*` and `without_key` to control which outputs are extracted.
+The macro creates `release.wic`, `release-vmlinux`, and `release-ssh-key`. With
+`without_key = True`, the SSH-key output is omitted. The `prefix` argument can be used
+to choose a different prefix for these output targets.
