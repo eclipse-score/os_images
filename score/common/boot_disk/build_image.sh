@@ -128,14 +128,15 @@ declare -A made_dirs=()
 
 # Creates every missing parent directory of FAT path $1.
 make_parents() {
-    local dir path="" parts
+    local dir path="" parts key
     IFS=/ read -ra parts <<<"$(dirname "$1")"
     for dir in "${parts[@]}"; do
         [[ -z "${dir}" || "${dir}" == "." ]] && continue
         path="${path}/${dir}"
-        if [[ -z "${made_dirs[${path}]:-}" ]]; then
+        key="${path,,}"
+        if [[ -z "${made_dirs[${key}]:-}" ]]; then
             mmd -i "${FAT_IMAGE}" "::${path}"
-            made_dirs[${path}]=1
+            made_dirs[${key}]=1
         fi
     done
 }
