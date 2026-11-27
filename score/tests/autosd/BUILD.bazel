@@ -10,7 +10,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
-load("@rules_python//python:defs.bzl", "py_test")
+
 load("@score_itf//:defs.bzl", "py_itf_test")
 
 test_suite(
