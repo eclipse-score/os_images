@@ -22,8 +22,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-SUMMARY = "EBcLfSA fastdev OS-only EFI image"
-DESCRIPTION = "FastDev kernel and userspace on a GPT disk for a provisioned AArch64 EBBR platform"
+SUMMARY = "Eclipse S-CORE EBcLfSA image"
 LICENSE = "MIT"
 
 inherit ebclfsa_image
@@ -34,22 +33,25 @@ inherit ebclfsa_image
 # nooelint: oelint.file.requireinclude oelint.file.includenotfound
 include recipes-images/fastdev/fastdev-bsp.inc
 
+EBCLFSA_FASTDEV_COMPATIBLE_MACHINE ?= "ebcl-qemuarm64"
 EBCLFSA_FASTDEV_FSTAB_CONFIG ?= "ebclfsa-fastdev-fstab"
 EBCLFSA_FASTDEV_NETWORK_CONFIG ?= "ebclfsa-fastdev-network"
 EBCLFSA_FASTDEV_SERIAL_CONFIG ?= "ebclfsa-fastdev-crinit-getty"
 
 IMAGE_FSTYPES = "wic"
-WKS_FILE = "fastdev-efi.wks.in"
+WKS_FILE = "baremetal-${MACHINE}.wks.in"
+WKS_FILE:rpi4b = "baremetal-efi.wks.in"
 
 KERNEL_IMAGE_PKG = "${EBCLFSA_FASTDEV_KERNEL_PKG}"
 
-COMPATIBLE_MACHINE = "^rpi4b$"
+COMPATIBLE_MACHINE = "${EBCLFSA_FASTDEV_COMPATIBLE_MACHINE}"
 
-# Platform firmware and the hardware description are provided by the EBBR platform.
-EBCL_BOOTLOADER = "0"
-EBCL_COPY_DEVICE_TREE = "0"
-IMAGE_BOOT_FILES = ""
-IMAGE_EFI_BOOT_FILES = ""
+EBCL_BOOTLOADER = "1"
+# The Raspberry Pi EBBR platform provides firmware and the hardware description.
+EBCL_BOOTLOADER:rpi4b = "0"
+EBCL_COPY_DEVICE_TREE:rpi4b = "0"
+IMAGE_BOOT_FILES:rpi4b = ""
+IMAGE_EFI_BOOT_FILES:rpi4b = ""
 
 require recipes-images/common/ebclfsa-common.inc
 
@@ -66,10 +68,8 @@ IMAGE_INSTALL:append = " \
 "
 
 IMAGE_INSTALL:append = " \
-    ebclfsa-comfwdlib-sim \
     ebclfsa-hi-cflinit \
     ebclfsa-hi-demo \
-    ebclfsa-li-demo \
 "
 
 IMAGE_INSTALL:append = " \
@@ -88,8 +88,8 @@ UNWANTED_PKGS = " \
 # Do not update fstab when creating wic images
 WIC_CREATE_EXTRA_ARGS:append = " --no-fstab-update"
 
-IMAGER_INSTALL += "${SYSTEMD_BOOTLOADER_INSTALL}"
-IMAGER_BOM += "${SYSTEMD_BOOTLOADER_INSTALL}"
+IMAGER_INSTALL:append:rpi4b = " ${SYSTEMD_BOOTLOADER_INSTALL}"
+IMAGER_BOM:append:rpi4b = " ${SYSTEMD_BOOTLOADER_INSTALL}"
 
 # Generate a development key using the toolkit's SSH target access support.
 EBCL_SSH_TARGET_ACCESS = "1"
