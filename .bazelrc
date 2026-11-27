@@ -14,10 +14,6 @@ build:qemu-integration --build_tag_filters=qemu-integration
 test:qemu-integration --test_tag_filters=qemu-integration
 test:qemu-integration --run_under=@score_itf//scripts:run_under_qemu
 
-# Needed by //score/tests/autosd:autosd_qemu_tests
-build:qemu-integration --//score/common/qemu:uefi_code=/usr/share/OVMF/OVMF_CODE_4M.fd
-build:qemu-integration --//score/common/qemu:uefi_vars=/usr/share/OVMF/OVMF_VARS_4M.fd
-
 common --registry=https://raw.githubusercontent.com/eclipse-score/bazel_registry/main/
 common --registry=https://bcr.bazel.build
 common --extra_toolchains=@score_linux_x86_64_ext4_toolchain//:ext4-x86_64-linux
