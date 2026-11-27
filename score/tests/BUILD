@@ -57,10 +57,11 @@ sh_test(
     args = [
         "x86_64",
         "$(location //score/os/ubuntu_x86_64:image)",
-        "--passwordless",
+        "$(location //score/os/ubuntu_x86_64:ssh_target_key)",
     ],
     data = [
         "//score/os/ubuntu_x86_64:image",
+        "//score/os/ubuntu_x86_64:ssh_target_key",
     ],
     tags = ["qemu-integration"],
     target_compatible_with = ["@platforms//os:linux"],
@@ -73,12 +74,13 @@ sh_test(
     args = [
         "aarch64",
         "$(location //score/os/ebclfsa_aarch64:image)",
-        "--passwordless",
+        "$(location //score/os/ebclfsa_aarch64:ssh_target_key)",
         "$(location //score/os/ebclfsa_aarch64:kernel)",
     ],
     data = [
         "//score/os/ebclfsa_aarch64:image",
         "//score/os/ebclfsa_aarch64:kernel",
+        "//score/os/ebclfsa_aarch64:ssh_target_key",
     ],
     tags = [
         "manual",
@@ -176,7 +178,7 @@ py_itf_test(
         "test_multicast.py",
         "test_no_disk.py",
         "test_ping.py",
-        "test_ssh_auth.py",
+        "test_ssh_passwordless.py",
     ],
     args = [
         "--qemu-config=$(location //score/tests/ebclfsa_aarch64_prebuild:qemu_config)",

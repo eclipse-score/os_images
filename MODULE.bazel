@@ -78,20 +78,6 @@ oci = use_extension("@rules_oci//oci:extensions.bzl", "oci")
 
 ###############################################################################
 #
-# EBcLfSA release archive used as base for the aarch64 QEMU image
-#
-###############################################################################
-http_file = use_repo_rule("@bazel_tools//tools/build_defs/repo:http.bzl", "http_file")
-
-http_file(
-    name = "score_os_images_release_archive",
-    downloaded_file_path = "score-image-trixie-ebclfsa-ebcl-qemuarm64.tar.gz",
-    sha256 = "c0dcfbe2e22756fc9b9763e2c180306925e327c3b2b8442aa9196712e5767b72",
-    urls = ["https://github.com/eclipse-score/os_images/releases/download/v0.0.5/score-image-trixie-ebclfsa-ebcl-qemuarm64.tar.gz"],
-)
-
-###############################################################################
-#
 # EB corbos Toolkit sources used to build the aarch64 image from scratch
 #
 # Only the KAS configuration, the bundled Isar layers and the development
@@ -124,6 +110,8 @@ filegroup(
 # The file uses the ".img" extension but is in fact a qcow2 image.
 #
 ###############################################################################
+http_file = use_repo_rule("@bazel_tools//tools/build_defs/repo:http.bzl", "http_file")
+
 http_file(
     name = "ubuntu_noble_minimal_cloudimg_amd64",
     downloaded_file_path = "ubuntu-24.04-minimal-cloudimg-amd64.img",

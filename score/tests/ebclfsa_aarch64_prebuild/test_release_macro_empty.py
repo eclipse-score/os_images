@@ -21,7 +21,7 @@ import unittest
 
 
 class ReleaseMacroEmptyPackagesTest(unittest.TestCase):
-    def test_image_is_vanilla_and_config_uses_key_runfile_path(self):
+    def test_image_is_vanilla_and_config_matches_archive_template(self):
         image, vanilla, kernel, key, config, archive = map(Path, sys.argv[1:])
 
         self.assertTrue(os.path.samefile(image, vanilla))
@@ -41,15 +41,11 @@ class ReleaseMacroEmptyPackagesTest(unittest.TestCase):
                             hashlib.file_digest(original, "sha256").digest(),
                         )
 
+        with tarfile.open(archive, "r:gz") as release:
+            with release.extractfile("qemu_config.json.template") as template:
+                archived_config = json.load(template)
         with config.open(encoding="utf-8") as config_file:
-            qemu_config = json.load(config_file)
-        if key.is_absolute():
-            expected_key_path = key.relative_to(
-                Path(os.environ["TEST_SRCDIR"])
-            ).as_posix()
-        else:
-            expected_key_path = key.as_posix()
-        self.assertEqual(qemu_config["ssh_auth"]["pkey_path"], expected_key_path)
+            self.assertEqual(json.load(config_file), archived_config)
 
 
 if __name__ == "__main__":

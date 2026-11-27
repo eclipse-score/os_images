@@ -211,6 +211,28 @@ filegroup(
     visibility = ["//visibility:public"],
 )
 
+genrule(
+    name = "test_archive",
+    srcs = [
+        ":image",
+        ":kernel",
+        ":ssh_target_key",
+        "qemu_config.template",
+    ],
+    outs = ["score-image-trixie-ebclfsa-ebcl-qemuarm64-test.tar.gz"],
+    cmd = """
+        tar --dereference -czf "$@" \\
+            --transform='s|.*/||' \\
+            --transform='s|^qemu_config\\.template$$|qemu_config.json.template|' \\
+            "$(location :image)" \\
+            "$(location :kernel)" \\
+            "$(location :ssh_target_key)" \\
+            "$(location qemu_config.template)"
+    """,
+    tags = ["manual"],
+    visibility = ["//score/tests:__subpackages__"],
+)
+
 qemu_config(
     name = "qemu_config",
     out = "qemu_config.json",

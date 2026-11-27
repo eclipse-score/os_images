@@ -154,7 +154,8 @@ ebclfsa_aarch64_prebuild(
 ```
 
 This defines `//qemu:image`, `//qemu:vanilla-image`, `//qemu:kernel`,
-`//qemu:qemu_config`, and `//qemu:ssh_target_key`. Without extra packages,
+`//qemu:qemu_config`, and `//qemu:ssh_target_key`. The archive's
+`qemu_config.json.template` is used to generate `:qemu_config`. Without extra packages,
 `image` is the unmodified `vanilla-image`. To customize it, pass `packages` as
 a list of labels for compatible Debian packages, in dependency order (least
 dependent first). Customization boots the image with QEMU and installs the

@@ -21,7 +21,6 @@ class QemuConfigTest(unittest.TestCase):
         prebuild_path, ebclfsa_path, ubuntu_path = sys.argv[1:]
         with open(prebuild_path, encoding="utf-8") as config_file:
             prebuild = json.load(config_file)
-        self.assertTrue(prebuild["ssh_auth"]["pkey_path"])
 
         for config_path in (ebclfsa_path, ubuntu_path):
             with self.subTest(config_path=config_path):

@@ -16,7 +16,6 @@ exports_files(
         "build_image.sh",
         "defs.bzl",
         "extract_release_archive.py",
-        "qemu_config.template.json",
     ],
     visibility = ["//visibility:public"],
 )
