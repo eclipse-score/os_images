@@ -13,14 +13,6 @@
 
 load("@score_itf//:defs.bzl", "py_itf_test")
 
-test_suite(
-    name = "qemu_tests",
-    tags = ["manual"],
-    tests = [
-        ":autosd_qemu_tests",
-    ],
-)
-
 py_itf_test(
     name = "autosd_qemu_tests",
     srcs = [
