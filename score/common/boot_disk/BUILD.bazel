@@ -1,0 +1,102 @@
+# *******************************************************************************
+# Copyright (c) 2026 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+
+load("@rules_pkg//pkg:mappings.bzl", "pkg_files")
+load("@rules_shell//shell:sh_binary.bzl", "sh_binary")
+load("@rules_shell//shell:sh_test.bzl", "sh_test")
+load(":defs.bzl", "boot_disk")
+
+exports_files(["defs.bzl"])
+
+sh_binary(
+    name = "build_image",
+    srcs = ["build_image.sh"],
+    visibility = ["//visibility:public"],
+)
+
+# --- Tests --------------------------------------------------------------------
+#
+# The test images and the test are manual: they need mtools + util-linux on the
+# host, which CI runners don't provide. Run with:
+#
+#     bazel test //score/common/boot_disk:boot_disk_test
+
+# Dummy boot files; each file's content is its own basename.
+genrule(
+    name = "test_fixtures",
+    outs = [
+        "testdata/u-boot.bin",
+        "testdata/config.txt",
+        "testdata/overlay.dtbo",
+    ],
+    cmd = "for f in $(OUTS); do printf %s $$(basename $$f) > $$f; done",
+    tags = ["manual"],
+    visibility = ["//visibility:private"],
+)
+
+pkg_files(
+    name = "test_overlays",
+    srcs = ["testdata/overlay.dtbo"],
+    prefix = "overlays",
+    tags = ["manual"],
+    visibility = ["//visibility:private"],
+)
+
+TEST_SRCS = [
+    "testdata/u-boot.bin",
+    "testdata/config.txt",
+    ":test_overlays",
+]
+
+boot_disk(
+    name = "test_mbr",
+    srcs = TEST_SRCS,
+    tags = ["manual"],
+    visibility = ["//visibility:private"],
+)
+
+boot_disk(
+    name = "test_gpt",
+    srcs = TEST_SRCS,
+    partition_table = "gpt",
+    tags = ["manual"],
+    visibility = ["//visibility:private"],
+)
+
+boot_disk(
+    name = "test_fat16",
+    srcs = TEST_SRCS,
+    fat_type = 16,
+    size_mib = 16,
+    tags = ["manual"],
+    visibility = ["//visibility:private"],
+)
+
+sh_test(
+    name = "boot_disk_test",
+    srcs = ["boot_disk_test.sh"],
+    args = [
+        "$(rootpath :build_image.sh)",
+        "$(rootpath :test_mbr)",
+        "$(rootpath :test_gpt)",
+        "$(rootpath :test_fat16)",
+    ],
+    data = [
+        ":build_image.sh",
+        ":test_fat16",
+        ":test_gpt",
+        ":test_mbr",
+    ],
+    tags = ["manual"],
+    visibility = ["//visibility:private"],
+)
